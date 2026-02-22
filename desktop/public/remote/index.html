@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LyriX Remote Control</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --primary-color: #4f46e5;
+            /* LyriX Indigo */
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+            overscroll-behavior: none;
+            touch-action: manipulation;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-container {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        .logo-text {
+            color: white;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 5px 0;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .status {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ef4444;
+            /* red initially */
+        }
+
+        .status-dot.connected {
+            background-color: #10b981;
+            /* green */
+        }
+
+        .controls-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+            flex: 1;
+            padding-bottom: 20px;
+        }
+
+        .nav-row {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .btn {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            flex: 1;
+            padding: 24px 12px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+            background-color: #f1f5f9;
+        }
+
+        .btn-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--primary-color), #6366f1);
+            color: white;
+            border: none;
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-next:active {
+            background: linear-gradient(135deg, #4338ca, #4f46e5);
+        }
+
+        .btn-prev {
+            /* standard btn style */
+            background-color: white;
+            color: var(--text-secondary);
+        }
+
+        .btn-blank-wrapper {
+            width: 100%;
+            height: 120px;
+            /* fixed height for prominent blank button */
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .btn-blank {
+            width: 100%;
+            background-color: #0f172a;
+            border: none;
+            color: #f8fafc;
+        }
+
+        .btn-blank:active {
+            background-color: #1e293b;
+        }
+
+        .btn-blank.active-blank {
+            background-color: #ef4444;
+            /* red when blinding the screen */
+            color: white;
+            box-shadow: 0 10px 20px -5px rgba(239, 68, 68, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo-text">LyriX</div>
+        </div>
+        <h1 class="title">Remote Control</h1>
+        <div class="status">
+            <div id="statusDot" class="status-dot"></div>
+            <span id="statusText">Connecting...</span>
+        </div>
+    </div>
+
+    <div class="controls-grid">
+        <div class="nav-row">
+            <button class="btn btn-prev" onclick="sendCommand('prev-slide')">
+                <span class="btn-icon">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </span>
+                Previous
+            </button>
+            <button class="btn btn-next" onclick="sendCommand('next-slide')">
+                <span class="btn-icon">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+                Next
+            </button>
+        </div>
+
+        <div class="btn-blank-wrapper">
+            <button class="btn btn-blank" id="blankBtn" onclick="sendCommand('blank-screen')">
+                <span class="btn-icon" id="blankIcon">🟢</span>
+                <span id="blankText" style="font-weight: 800; letter-spacing: 1px;">LIVE</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const blankBtn = document.getElementById('blankBtn');
+
+        const blankIcon = document.getElementById('blankIcon');
+        const blankText = document.getElementById('blankText');
+
+        socket.on('connect', () => {
+            statusDot.classList.add('connected');
+            statusText.textContent = 'Connected (Live)';
+        });
+
+        socket.on('disconnect', (reason) => {
+            statusDot.classList.remove('connected');
+            if (reason === 'io server disconnect') {
+                statusText.textContent = 'Disconnected (Server Limit Reached)';
+            } else {
+                statusText.textContent = 'Disconnected';
+            }
+        });
+
+        socket.on('connection-rejected', (data) => {
+            statusDot.classList.remove('connected');
+            statusText.textContent = `Rejected: ${data.reason}`;
+            socket.disconnect();
+        });
+
+        // Listen for true state changes from the Desktop App
+        socket.on('blank-screen', (serverIsBlack) => {
+            if (serverIsBlack) {
+                blankBtn.classList.add('active-blank');
+                blankIcon.textContent = '🔴';
+                blankText.textContent = 'OFF AIR';
+            } else {
+                blankBtn.classList.remove('active-blank');
+                blankIcon.textContent = '🟢';
+                blankText.textContent = 'LIVE';
+            }
+        });
+
+        function sendCommand(action) {
+            // Provide immediate haptic feedback if supported on mobile
+            if (navigator.vibrate) navigator.vibrate(50);
+
+            const cmdId = Date.now().toString() + Math.random().toString();
+
+            // Just emit the command, and let the Desktop App's state echo back to update our UI
+            socket.emit('command', { action, cmdId });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+  ??? electron-builder  version=26.8.1 os=10.0.26200
+  ??? loaded configuration  file=package.json ("build" field)
+  ??? effective config  config=directories:
+  output: release_v2
+  buildResources: build
+appId: com.lyrix.desktop
+productName: LyriX Church System
+files:
+  - filter:
+      - src/**/*
+      - renderer_dist/**/*
+      - public/**/*
+asarUnpack:
+  - '**/*.node'
+  - '**/better-sqlite3/**'
+win:
+  target: nsis
+  icon: public/icon.ico
+publish:
+  - provider: github
+    owner: vamsibo
+    repo: LyriX-Church-System
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+
+  ??? description is missed in the package.json  appPackageFile=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\package.json
+  ??? @electron/rebuild already used by electron-builder, please consider to remove excess dependency from devDependencies
+
+To ensure your native dependencies are always matched electron version, simply add script `"postinstall": "electron-builder install-app-deps" to your `package.json`
+  ??? no event listeners found  event=beforePack
+  ??? spawning        command=npm prefix -w cwd=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop
+  ??? exited          command=npm code=1 pid=11528
+  ??? executing @electron/rebuild  electronVersion=40.4.1 arch=x64 buildFromSource=false workspaceRoot=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop projectDir=./ appDir=./
+  ??? installing native dependencies  arch=x64
+  ??? preparing       moduleName=better-sqlite3 arch=x64
+  ??? finished        moduleName=better-sqlite3 arch=x64
+  ??? skipped. set ENV=electron-rebuild to determine why  moduleName=better-sqlite3 arch=x64
+  ??? completed installing native dependencies
+  ??? packaging       platform=win32 arch=x64 electron=40.4.1 appOutDir=release_v2\win-unpacked
+  ??? no custom electronDist provided, unpacking default Electron distribution
+  ??? spawning        command=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-bin\win\x64\app-builder.exe unpack-electron --configuration [{"platform":"win32","arch":"x64","version":"40.4.1"}] --output C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\win-unpacked --distMacOsAppName Electron.app
+  ??? map async       taskCount=2
+  ??? map async       taskCount=1
+  ??? remove C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\win-unpacked\d3dcompiler_47.dll: Access is denied.
+github.com/develar/go-fs-util.EnsureEmptyDir
+	/Users/runner/go/pkg/mod/github.com/develar/go-fs-util@v0.0.0-20190620175131-69a2d4542206/fs.go:98
+github.com/develar/app-builder/pkg/electron.UnpackElectron.func1.1
+	/Users/runner/work/app-builder/app-builder/pkg/electron/electronUnpack.go:38
+github.com/develar/app-builder/pkg/util.MapAsyncConcurrency.func2
+	/Users/runner/work/app-builder/app-builder/pkg/util/async.go:68
+runtime.goexit
+	/Users/runner/hostedtoolcache/go/1.21.13/arm64/src/runtime/asm_amd64.s:1650  
+  ??? exited          command=app-builder.exe code=1 pid=4228
+  ??? C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-bin\win\x64\app-builder.exe process failed ERR_ELECTRON_BUILDER_CANNOT_EXECUTE
+Exit code:
+1  failedTask=build stackTrace=Error: C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-bin\win\x64\app-builder.exe process failed ERR_ELECTRON_BUILDER_CANNOT_EXECUTE
+Exit code:
+1
+    at ChildProcess.<anonymous> (C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\builder-util\src\util.ts:272:14)
+    at Object.onceWrapper (node:events:623:26)
+    at ChildProcess.emit (node:events:508:28)
+    at ChildProcess.cp.emit (C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\cross-spawn\lib\enoent.js:34:29)
+    at maybeClose (node:internal/child_process:1101:16)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:305:5)

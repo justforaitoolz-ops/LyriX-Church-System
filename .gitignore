@@ -1,0 +1,19 @@
+# Dependencies and Builds
+node_modules/
+dist/
+release/
+release_*/
+renderer_dist/
+Faith_Companion_Extracted/
+*.log
+
+# Installer and Binary files
+*.exe
+*.apk
+*.asar
+Faith_Companion*.apk
+LyriX*.exe
+**/node_modules/
+**/dist/
+**/release/
+**/renderer_dist/

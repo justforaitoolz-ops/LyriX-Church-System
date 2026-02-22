@@ -1,0 +1,26 @@
+const { contextBridge, ipcRenderer } = require('electron');
+
+function exposeListener(channel) {
+    return (callback) => {
+        const handler = (event, ...args) => callback(event, ...args);
+        ipcRenderer.on(channel, handler);
+        return () => ipcRenderer.removeListener(channel, handler);
+    };
+}
+
+contextBridge.exposeInMainWorld('electron', {
+    onStatus: exposeListener('status-update'),
+    onProjectorStateChanged: exposeListener('projector-state-changed'),
+    onProjectorKeyPress: exposeListener('projector-key-press'),
+    onRemoteCommand: exposeListener('remote-command'),
+    onScheduleUpdate: exposeListener('schedule-updated'),
+    onProjectorSyncSlide: exposeListener('current-slide'),
+    onProjectorSyncBlank: exposeListener('blank-screen'),
+    onProjectorSyncSettings: exposeListener('settings-update'),
+    onUpdateStatus: exposeListener('update-status'),
+    onUpdateProgress: exposeListener('update-progress'),
+    sendAction: (action, data) => ipcRenderer.send('action', { action, data }),
+    invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
+    deleteSong: (id) => ipcRenderer.invoke('delete-song', id),
+    appControl: (command) => ipcRenderer.invoke('app-control', command),
+});

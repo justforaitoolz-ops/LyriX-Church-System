@@ -1,0 +1,718 @@
+  ??? electron-builder  version=26.8.1 os=10.0.26200
+  ??? loaded configuration  file=package.json ("build" field)
+  ??? effective config  config=directories:
+  output: release_v2
+  buildResources: build
+appId: com.lyrix.desktop
+productName: LyriX Church System
+win:
+  target: nsis
+  icon: public/icon.ico
+publish:
+  - provider: github
+    owner: vamsibo
+    repo: LyriX-Church-System
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+files: []
+
+  ??? description is missed in the package.json  appPackageFile=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\package.json
+  ??? @electron/rebuild already used by electron-builder, please consider to remove excess dependency from devDependencies
+
+To ensure your native dependencies are always matched electron version, simply add script `"postinstall": "electron-builder install-app-deps" to your `package.json`
+  ??? no event listeners found  event=beforePack
+  ??? spawning        command=npm prefix -w cwd=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop
+  ??? exited          command=npm code=1 pid=27584
+  ??? executing @electron/rebuild  electronVersion=40.4.1 arch=x64 buildFromSource=false workspaceRoot=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop projectDir=./ appDir=./
+  ??? installing native dependencies  arch=x64
+  ??? preparing       moduleName=better-sqlite3 arch=x64
+  ??? finished        moduleName=better-sqlite3 arch=x64
+  ??? skipped. set ENV=electron-rebuild to determine why  moduleName=better-sqlite3 arch=x64
+  ??? completed installing native dependencies
+  ??? packaging       platform=win32 arch=x64 electron=40.4.1 appOutDir=release_v2\win-unpacked
+  ??? no custom electronDist provided, unpacking default Electron distribution
+  ??? spawning        command=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-bin\win\x64\app-builder.exe unpack-electron --configuration [{"platform":"win32","arch":"x64","version":"40.4.1"}] --output C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\win-unpacked --distMacOsAppName Electron.app
+  ??? map async       taskCount=2
+  ??? map async       taskCount=1
+  ??? map async       taskCount=75
+  ??? exited          command=app-builder.exe code=0 pid=26060
+  ??? no event listeners found  event=afterExtract
+  ??? searching for node modules  pm=npm searchDir=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop
+node.exe : (node:23012) [DEP0190] 
+DeprecationWarning: Passing args to 
+a child process with shell option 
+true can lead to security 
+vulnerabilities, as the arguments 
+are not escaped, only concatenated.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Users\BODDU_VAMSI\AppData\Ro ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpe 
+   cified: ((node:23012) [D...y con  
+  catenated.:String) [], RemoteExc   
+ eption
+    + FullyQualifiedErrorId : Native 
+   CommandError
+ 
+(Use `node --trace-deprecation ...` 
+to show where the warning was 
+created)
+  ??? `npm list` returned non-zero exit code, but it MIGHT be expected (https://github.com/npm/npm/issues/17624). Check stderr for details.
+  ??? note: there was node module collector output on stderr  stderr=npm error code ELSPROBLEMS
+npm error missing: electron-updater@^6.8.3, required by desktop@1.0.0
+npm error A complete log of this run can be found in: C:\Users\BODDU_VAMSI\AppData\Local\npm-cache\_logs\2026-02-22T15_55_47_707Z-debug-0.log
+
+  ??? node modules collection complete  packageName=desktop depCount=235
+  ??? collected node modules  pm=npm nodeModules=[{"name":"@firebase/ai","version":"2.8.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\ai"},{"name":"@firebase/analytics","version":"0.10.19","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\analytics"},{"name":"@firebase/analytics-compat","version":"0.2.25","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\analytics-compat"},{"name":"@firebase/analytics-types","version":"0.8.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\analytics-types"},{"name":"@firebase/app","version":"0.14.8","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\app"},{"name":"@firebase/app-check","version":"0.11.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\app-check"},{"name":"@firebase/app-check-compat","version":"0.4.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\app-check-compat"},{"name":"@firebase/app-check-interop-types","version":"0.3.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\app-check-interop-types"},{"name":"@firebase/app-check-types","version":"0.5.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\app-check-types"},{"name":"@firebase/app-compat","version":"0.5.8","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\app-compat"},{"name":"@firebase/app-types","version":"0.9.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\app-types"},{"name":"@firebase/auth","version":"1.12.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\auth"},{"name":"@firebase/auth-compat","version":"0.6.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\auth-compat"},{"name":"@firebase/auth-interop-types","version":"0.2.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\auth-interop-types"},{"name":"@firebase/auth-types","version":"0.13.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\auth-types"},{"name":"@firebase/component","version":"0.7.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\component"},{"name":"@firebase/data-connect","version":"0.3.12","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\data-connect"},{"name":"@firebase/database","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\database"},{"name":"@firebase/database-compat","version":"2.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\database-compat"},{"name":"@firebase/database-types","version":"1.0.16","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\database-types"},{"name":"@firebase/firestore","version":"4.11.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\firestore"},{"name":"@firebase/firestore-compat","version":"0.4.5","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\firestore-compat"},{"name":"@firebase/firestore-types","version":"3.0.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\firestore-types"},{"name":"@firebase/functions","version":"0.13.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\functions"},{"name":"@firebase/functions-compat","version":"0.4.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\functions-compat"},{"name":"@firebase/functions-types","version":"0.6.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\functions-types"},{"name":"@firebase/installations","version":"0.6.19","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\installations"},{"name":"@firebase/installations-compat","version":"0.2.19","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\installations-compat"},{"name":"@firebase/installations-types","version":"0.5.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\installations-types"},{"name":"@firebase/logger","version":"0.5.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\logger"},{"name":"@firebase/messaging","version":"0.12.23","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\messaging"},{"name":"@firebase/messaging-compat","version":"0.2.23","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\messaging-compat"},{"name":"@firebase/messaging-interop-types","version":"0.2.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\messaging-interop-types"},{"name":"@firebase/performance","version":"0.7.9","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\performance"},{"name":"@firebase/performance-compat","version":"0.2.22","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\performance-compat"},{"name":"@firebase/performance-types","version":"0.2.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\performance-types"},{"name":"@firebase/remote-config","version":"0.8.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\remote-config"},{"name":"@firebase/remote-config-compat","version":"0.2.21","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\remote-config-compat"},{"name":"@firebase/remote-config-types","version":"0.5.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\remote-config-types"},{"name":"@firebase/storage","version":"0.14.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\storage"},{"name":"@firebase/storage-compat","version":"0.4.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\storage-compat"},{"name":"@firebase/storage-types","version":"0.8.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\storage-types"},{"name":"@firebase/util","version":"1.13.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\util"},{"name":"@firebase/webchannel-wrapper","version":"1.0.5","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@firebase\\webchannel-wrapper"},{"name":"@grpc/grpc-js","version":"1.9.15","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@grpc\\grpc-js"},{"name":"@grpc/proto-loader","version":"0.7.15","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@grpc\\proto-loader"},{"name":"@protobufjs/aspromise","version":"1.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\aspromise"},{"name":"@protobufjs/base64","version":"1.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\base64"},{"name":"@protobufjs/codegen","version":"2.0.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\codegen"},{"name":"@protobufjs/eventemitter","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\eventemitter"},{"name":"@protobufjs/fetch","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\fetch"},{"name":"@protobufjs/float","version":"1.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\float"},{"name":"@protobufjs/inquire","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\inquire"},{"name":"@protobufjs/path","version":"1.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\path"},{"name":"@protobufjs/pool","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\pool"},{"name":"@protobufjs/utf8","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@protobufjs\\utf8"},{"name":"@socket.io/component-emitter","version":"3.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@socket.io\\component-emitter"},{"name":"@types/cors","version":"2.8.19","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@types\\cors"},{"name":"@types/node","version":"24.10.13","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\@types\\node"},{"name":"accepts","version":"1.3.8","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\engine.io\\node_modules\\accepts","dependencies":[{"name":"mime-types","version":"2.1.35","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\engine.io\\node_modules\\mime-types"},{"name":"negotiator","version":"0.6.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\engine.io\\node_modules\\negotiator"}]},{"name":"ansi-regex","version":"5.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\ansi-regex"},{"name":"ansi-styles","version":"4.3.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\ansi-styles"},{"name":"asynckit","version":"0.4.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\asynckit"},{"name":"axios","version":"1.13.5","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\axios"},{"name":"base64-js","version":"1.5.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\base64-js"},{"name":"base64id","version":"2.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\base64id"},{"name":"better-sqlite3","version":"12.6.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\better-sqlite3"},{"name":"bindings","version":"1.5.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\bindings"},{"name":"bl","version":"4.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\bl"},{"name":"body-parser","version":"2.2.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\body-parser","dependencies":[{"name":"iconv-lite","version":"0.7.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\raw-body\\node_modules\\iconv-lite"}]},{"name":"boolbase","version":"1.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\boolbase"},{"name":"buffer","version":"5.7.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\buffer"},{"name":"bytes","version":"3.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\bytes"},{"name":"call-bind-apply-helpers","version":"1.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\call-bind-apply-helpers"},{"name":"call-bound","version":"1.0.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\call-bound"},{"name":"cheerio","version":"1.2.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\cheerio"},{"name":"cheerio-select","version":"2.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\cheerio-select"},{"name":"chownr","version":"1.1.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\tar-fs\\node_modules\\chownr"},{"name":"cliui","version":"8.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\cliui"},{"name":"clsx","version":"2.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\clsx"},{"name":"color-convert","version":"2.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\color-convert"},{"name":"color-name","version":"1.1.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\color-name"},{"name":"combined-stream","version":"1.0.8","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\combined-stream"},{"name":"content-disposition","version":"1.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\content-disposition"},{"name":"content-type","version":"1.0.5","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\content-type"},{"name":"cookie","version":"0.7.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\cookie"},{"name":"cookie-signature","version":"1.2.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\cookie-signature"},{"name":"cors","version":"2.8.6","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\cors"},{"name":"css-select","version":"5.2.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\css-select"},{"name":"css-what","version":"6.2.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\css-what"},{"name":"debug","version":"4.4.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\debug"},{"name":"decompress-response","version":"6.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\decompress-response"},{"name":"deep-extend","version":"0.6.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\deep-extend"},{"name":"delayed-stream","version":"1.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\delayed-stream"},{"name":"depd","version":"2.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\depd"},{"name":"detect-libc","version":"2.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\detect-libc"},{"name":"dom-serializer","version":"2.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\dom-serializer"},{"name":"domelementtype","version":"2.3.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\domelementtype"},{"name":"domhandler","version":"5.0.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\domhandler"},{"name":"domutils","version":"3.2.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\domutils"},{"name":"dunder-proto","version":"1.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\dunder-proto"},{"name":"ee-first","version":"1.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\ee-first"},{"name":"emoji-regex","version":"8.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\emoji-regex"},{"name":"encodeurl","version":"2.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\encodeurl"},{"name":"encoding-sniffer","version":"0.2.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\encoding-sniffer"},{"name":"end-of-stream","version":"1.4.5","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\end-of-stream"},{"name":"engine.io","version":"6.6.5","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\engine.io"},{"name":"engine.io-parser","version":"5.2.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\engine.io-parser"},{"name":"entities","version":"4.5.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\entities"},{"name":"es-define-property","version":"1.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\es-define-property"},{"name":"es-errors","version":"1.3.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\es-errors"},{"name":"es-object-atoms","version":"1.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\es-object-atoms"},{"name":"es-set-tostringtag","version":"2.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\es-set-tostringtag"},{"name":"escalade","version":"3.2.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\escalade"},{"name":"escape-html","version":"1.0.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\escape-html"},{"name":"etag","version":"1.8.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\etag"},{"name":"expand-template","version":"2.0.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\expand-template"},{"name":"express","version":"5.2.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\express","dependencies":[{"name":"accepts","version":"2.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\accepts"}]},{"name":"faye-websocket","version":"0.11.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\faye-websocket"},{"name":"file-uri-to-path","version":"1.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\file-uri-to-path"},{"name":"finalhandler","version":"2.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\finalhandler"},{"name":"firebase","version":"12.9.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\firebase"},{"name":"follow-redirects","version":"1.15.11","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\follow-redirects"},{"name":"form-data","version":"4.0.5","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\form-data","dependencies":[{"name":"mime-types","version":"2.1.35","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\engine.io\\node_modules\\mime-types"}]},{"name":"forwarded","version":"0.2.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\forwarded"},{"name":"fresh","version":"2.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\fresh"},{"name":"fs-constants","version":"1.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\fs-constants"},{"name":"function-bind","version":"1.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\function-bind"},{"name":"get-caller-file","version":"2.0.5","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\get-caller-file"},{"name":"get-intrinsic","version":"1.3.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\get-intrinsic"},{"name":"get-proto","version":"1.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\get-proto"},{"name":"github-from-package","version":"0.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\github-from-package"},{"name":"gopd","version":"1.2.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\gopd"},{"name":"has-symbols","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\has-symbols"},{"name":"has-tostringtag","version":"1.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\has-tostringtag"},{"name":"hasown","version":"2.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\hasown"},{"name":"htmlparser2","version":"10.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\htmlparser2","dependencies":[{"name":"entities","version":"7.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\htmlparser2\\node_modules\\entities"}]},{"name":"http-errors","version":"2.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\http-errors"},{"name":"http-parser-js","version":"0.5.10","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\http-parser-js"},{"name":"iconv-lite","version":"0.6.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\iconv-lite"},{"name":"idb","version":"7.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\idb"},{"name":"ieee754","version":"1.2.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\ieee754"},{"name":"inherits","version":"2.0.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\inherits"},{"name":"ini","version":"1.3.8","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\ini"},{"name":"ipaddr.js","version":"1.9.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\ipaddr.js"},{"name":"is-fullwidth-code-point","version":"3.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\is-fullwidth-code-point"},{"name":"is-promise","version":"4.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\is-promise"},{"name":"js-tokens","version":"4.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\js-tokens"},{"name":"lodash.camelcase","version":"4.3.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\lodash.camelcase"},{"name":"long","version":"5.3.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\long"},{"name":"loose-envify","version":"1.4.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\loose-envify"},{"name":"math-intrinsics","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\math-intrinsics"},{"name":"media-typer","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\media-typer"},{"name":"merge-descriptors","version":"2.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\merge-descriptors"},{"name":"mime-db","version":"1.52.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\engine.io\\node_modules\\mime-db"},{"name":"mime-types","version":"3.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\mime-types","dependencies":[{"name":"mime-db","version":"1.54.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\mime-db"}]},{"name":"mimic-response","version":"3.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\decompress-response\\node_modules\\mimic-response"},{"name":"minimist","version":"1.2.8","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\minimist"},{"name":"mkdirp-classic","version":"0.5.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\mkdirp-classic"},{"name":"ms","version":"2.1.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\ms"},{"name":"napi-build-utils","version":"2.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\napi-build-utils"},{"name":"negotiator","version":"1.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\negotiator"},{"name":"node-abi","version":"3.87.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\prebuild-install\\node_modules\\node-abi"},{"name":"nth-check","version":"2.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\nth-check"},{"name":"object-assign","version":"4.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\object-assign"},{"name":"object-inspect","version":"1.13.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\object-inspect"},{"name":"on-finished","version":"2.4.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\on-finished"},{"name":"once","version":"1.4.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\once"},{"name":"parse5","version":"7.3.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\parse5","dependencies":[{"name":"entities","version":"6.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\parse5\\node_modules\\entities"}]},{"name":"parse5-htmlparser2-tree-adapter","version":"7.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\parse5-htmlparser2-tree-adapter"},{"name":"parse5-parser-stream","version":"7.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\parse5-parser-stream"},{"name":"parseurl","version":"1.3.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\parseurl"},{"name":"path-to-regexp","version":"8.3.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\path-to-regexp"},{"name":"prebuild-install","version":"7.1.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\prebuild-install"},{"name":"prop-types","version":"15.8.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\prop-types"},{"name":"protobufjs","version":"7.5.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\protobufjs"},{"name":"proxy-addr","version":"2.0.7","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\proxy-addr"},{"name":"proxy-from-env","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\proxy-from-env"},{"name":"pump","version":"3.0.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\pump"},{"name":"qr.js","version":"0.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\qr.js"},{"name":"qs","version":"6.15.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\qs"},{"name":"range-parser","version":"1.2.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\range-parser"},{"name":"raw-body","version":"3.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\raw-body","dependencies":[{"name":"iconv-lite","version":"0.7.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\raw-body\\node_modules\\iconv-lite"}]},{"name":"rc","version":"1.2.8","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\rc"},{"name":"react","version":"19.2.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\react"},{"name":"react-dom","version":"19.2.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\react-dom"},{"name":"react-is","version":"16.13.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\react-is"},{"name":"react-qr-code","version":"2.0.18","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\react-qr-code"},{"name":"readable-stream","version":"3.6.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\readable-stream"},{"name":"require-directory","version":"2.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\require-directory"},{"name":"router","version":"2.2.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\router"},{"name":"safe-buffer","version":"5.2.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\safe-buffer"},{"name":"safer-buffer","version":"2.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\safer-buffer"},{"name":"scheduler","version":"0.27.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\scheduler"},{"name":"semver","version":"7.7.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\semver"},{"name":"send","version":"1.2.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\send"},{"name":"serve-static","version":"2.2.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\serve-static"},{"name":"setprototypeof","version":"1.2.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\setprototypeof"},{"name":"side-channel","version":"1.1.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\side-channel"},{"name":"side-channel-list","version":"1.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\side-channel-list"},{"name":"side-channel-map","version":"1.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\side-channel-map"},{"name":"side-channel-weakmap","version":"1.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\side-channel-weakmap"},{"name":"simple-concat","version":"1.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\simple-concat"},{"name":"simple-get","version":"4.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\simple-get"},{"name":"socket.io","version":"4.8.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\socket.io"},{"name":"socket.io-adapter","version":"2.5.6","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\socket.io-adapter"},{"name":"socket.io-parser","version":"4.2.5","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\socket.io-parser"},{"name":"statuses","version":"2.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\statuses"},{"name":"string_decoder","version":"1.3.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\string_decoder"},{"name":"string-width","version":"4.2.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\string-width"},{"name":"strip-ansi","version":"6.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\strip-ansi"},{"name":"strip-json-comments","version":"2.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\strip-json-comments"},{"name":"tailwind-merge","version":"3.4.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\tailwind-merge"},{"name":"tar-fs","version":"2.1.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\tar-fs"},{"name":"tar-stream","version":"2.2.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\tar-stream"},{"name":"toidentifier","version":"1.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\toidentifier"},{"name":"tslib","version":"2.8.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\tslib"},{"name":"tunnel-agent","version":"0.6.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\tunnel-agent"},{"name":"type-is","version":"2.0.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\type-is"},{"name":"undici","version":"7.22.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\undici"},{"name":"undici-types","version":"7.16.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\undici-types"},{"name":"unpipe","version":"1.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\unpipe"},{"name":"util-deprecate","version":"1.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\util-deprecate"},{"name":"vary","version":"1.1.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\vary"},{"name":"web-vitals","version":"4.2.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\web-vitals"},{"name":"websocket-driver","version":"0.7.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\websocket-driver"},{"name":"websocket-extensions","version":"0.1.4","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\websocket-extensions"},{"name":"whatwg-encoding","version":"3.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\whatwg-encoding"},{"name":"whatwg-mimetype","version":"4.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\whatwg-mimetype"},{"name":"wrap-ansi","version":"7.0.0","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\wrap-ansi"},{"name":"wrappy","version":"1.0.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\wrappy"},{"name":"ws","version":"8.18.3","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\ws"},{"name":"y18n","version":"5.0.8","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\y18n"},{"name":"yargs","version":"17.7.2","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\yargs"},{"name":"yargs-parser","version":"21.1.1","dir":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\node_modules\\yargs-parser"}]
+  ??? collector stderr output  dependencies=["npm error code ELSPROBLEMS\nnpm error missing: electron-updater@^6.8.3, required by desktop@1.0.0\nnpm error A complete log of this run can be found in: C:\\Users\\BODDU_VAMSI\\AppData\\Local\\npm-cache\\_logs\\2026-02-22T15_55_47_707Z-debug-0.log\n"]
+  ??? duplicate dependency references  dependencies=["call-bind-apply-helpers@1.0.2","es-object-atoms@1.1.1","hasown@2.0.2","hasown@2.0.2","once@1.4.0","once@1.4.0","once@1.4.0","pump@3.0.3","readable-stream@3.6.2","end-of-stream@1.4.5","domhandler@5.0.3","domutils@3.2.2","domhandler@5.0.3","domutils@3.2.2","domhandler@5.0.3","dom-serializer@2.0.0","domhandler@5.0.3","iconv-lite@0.6.3","domhandler@5.0.3","domutils@3.2.2","domhandler@5.0.3","parse5@7.3.0","parse5@7.3.0","mime-types@3.0.2","debug@4.4.3","http-errors@2.0.1","on-finished@2.4.1","qs@6.15.0","http-errors@2.0.1","type-is@2.0.1","debug@4.4.3","on-finished@2.4.1","call-bind-apply-helpers@1.0.2","get-intrinsic@1.3.0","get-intrinsic@1.3.0","call-bound@1.0.4","get-intrinsic@1.3.0","side-channel-map@1.0.1","debug@4.4.3","debug@4.4.3","http-errors@2.0.1","mime-types@3.0.2","on-finished@2.4.1","send@1.2.1","mime-types@3.0.2","@firebase/app@0.14.8","@firebase/util@1.13.0","@firebase/util@1.13.0","@firebase/analytics@0.10.19","@firebase/app-compat@0.5.8","@firebase/component@0.7.0","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/installations@0.6.19","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/app-check@0.11.0","@firebase/app-compat@0.5.8","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/app-compat@0.5.8","@firebase/util@1.13.0","@firebase/auth@1.12.0","@firebase/component@0.7.0","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/component@0.7.0","@firebase/util@1.13.0","@firebase/database@1.1.0","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/app-compat@0.5.8","@firebase/component@0.7.0","@firebase/util@1.13.0","@firebase/firestore@4.11.0","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/util@1.13.0","@grpc/proto-loader@0.7.15","@types/node@24.10.13","@types/node@24.10.13","string-width@4.2.3","string-width@4.2.3","strip-ansi@6.0.1","strip-ansi@6.0.1","@firebase/app-compat@0.5.8","@firebase/component@0.7.0","@firebase/functions@0.13.1","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/util@1.13.0","@firebase/app-compat@0.5.8","@firebase/component@0.7.0","@firebase/installations@0.6.19","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/util@1.13.0","@firebase/app-compat@0.5.8","@firebase/component@0.7.0","@firebase/messaging@0.12.23","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/installations@0.6.19","@firebase/util@1.13.0","@firebase/app-compat@0.5.8","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/performance@0.7.9","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/installations@0.6.19","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/app-compat@0.5.8","@firebase/component@0.7.0","@firebase/logger@0.5.0","@firebase/remote-config@0.8.0","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/installations@0.6.19","@firebase/logger@0.5.0","@firebase/util@1.13.0","@firebase/app-compat@0.5.8","@firebase/component@0.7.0","@firebase/util@1.13.0","@firebase/storage@0.14.0","@firebase/util@1.13.0","@firebase/app@0.14.8","@firebase/component@0.7.0","@firebase/util@1.13.0","debug@4.4.3","@types/node@24.10.13","cors@2.8.6","debug@4.4.3","debug@4.4.3","debug@4.4.3"]
+  ??? cannot find path for dependency  dependencies=["electron-updater@undefined"]
+  ??? identified module  dep=@firebase/ai from=node_modules\@firebase\ai to=release_v2\win-unpacked\resources\app\node_modules\@firebase\ai filesCount=11
+  ??? identified module  dep=@firebase/analytics from=node_modules\@firebase\analytics to=release_v2\win-unpacked\resources\app\node_modules\@firebase\analytics filesCount=7
+  ??? identified module  dep=@firebase/analytics-compat from=node_modules\@firebase\analytics-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\analytics-compat filesCount=6
+  ??? identified module  dep=@firebase/analytics-types from=node_modules\@firebase\analytics-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\analytics-types filesCount=1
+  ??? identified module  dep=@firebase/app from=node_modules\@firebase\app to=release_v2\win-unpacked\resources\app\node_modules\@firebase\app filesCount=7
+  ??? identified module  dep=@firebase/app-check from=node_modules\@firebase\app-check to=release_v2\win-unpacked\resources\app\node_modules\@firebase\app-check filesCount=7
+  ??? identified module  dep=@firebase/app-check-compat from=node_modules\@firebase\app-check-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\app-check-compat filesCount=6
+  ??? identified module  dep=@firebase/app-check-interop-types from=node_modules\@firebase\app-check-interop-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\app-check-interop-types filesCount=1
+  ??? identified module  dep=@firebase/app-check-types from=node_modules\@firebase\app-check-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\app-check-types filesCount=1
+  ??? identified module  dep=@firebase/app-compat from=node_modules\@firebase\app-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\app-compat filesCount=9
+  ??? identified module  dep=@firebase/app-types from=node_modules\@firebase\app-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\app-types filesCount=1
+  ??? identified module  dep=@firebase/auth from=node_modules\@firebase\auth to=release_v2\win-unpacked\resources\app\node_modules\@firebase\auth filesCount=59
+  ??? identified module  dep=@firebase/auth-compat from=node_modules\@firebase\auth-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\auth-compat filesCount=12
+  ??? identified module  dep=@firebase/auth-interop-types from=node_modules\@firebase\auth-interop-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\auth-interop-types filesCount=1
+  ??? identified module  dep=@firebase/auth-types from=node_modules\@firebase\auth-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\auth-types filesCount=1
+  ??? identified module  dep=@firebase/component from=node_modules\@firebase\component to=release_v2\win-unpacked\resources\app\node_modules\@firebase\component filesCount=6
+  ??? identified module  dep=@firebase/data-connect from=node_modules\@firebase\data-connect to=release_v2\win-unpacked\resources\app\node_modules\@firebase\data-connect filesCount=11
+  ??? identified module  dep=@firebase/database from=node_modules\@firebase\database to=release_v2\win-unpacked\resources\app\node_modules\@firebase\database filesCount=13
+  ??? identified module  dep=@firebase/database-compat from=node_modules\@firebase\database-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\database-compat filesCount=11
+  ??? identified module  dep=@firebase/database-types from=node_modules\@firebase\database-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\database-types filesCount=1
+  ??? identified module  dep=@firebase/firestore from=node_modules\@firebase\firestore to=release_v2\win-unpacked\resources\app\node_modules\@firebase\firestore filesCount=89
+  ??? identified module  dep=@firebase/firestore-compat from=node_modules\@firebase\firestore-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\firestore-compat filesCount=12
+  ??? identified module  dep=@firebase/firestore-types from=node_modules\@firebase\firestore-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\firestore-types filesCount=1
+  ??? identified module  dep=@firebase/functions from=node_modules\@firebase\functions to=release_v2\win-unpacked\resources\app\node_modules\@firebase\functions filesCount=7
+  ??? identified module  dep=@firebase/functions-compat from=node_modules\@firebase\functions-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\functions-compat filesCount=6
+  ??? identified module  dep=@firebase/functions-types from=node_modules\@firebase\functions-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\functions-types filesCount=1
+  ??? identified module  dep=@firebase/installations from=node_modules\@firebase\installations to=release_v2\win-unpacked\resources\app\node_modules\@firebase\installations filesCount=7
+  ??? identified module  dep=@firebase/installations-compat from=node_modules\@firebase\installations-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\installations-compat filesCount=6
+  ??? identified module  dep=@firebase/installations-types from=node_modules\@firebase\installations-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\installations-types filesCount=1
+  ??? identified module  dep=@firebase/logger from=node_modules\@firebase\logger to=release_v2\win-unpacked\resources\app\node_modules\@firebase\logger filesCount=6
+  ??? identified module  dep=@firebase/messaging from=node_modules\@firebase\messaging to=release_v2\win-unpacked\resources\app\node_modules\@firebase\messaging filesCount=12
+  ??? identified module  dep=@firebase/messaging-compat from=node_modules\@firebase\messaging-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\messaging-compat filesCount=6
+  ??? identified module  dep=@firebase/messaging-interop-types from=node_modules\@firebase\messaging-interop-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\messaging-interop-types filesCount=1
+  ??? identified module  dep=@firebase/performance from=node_modules\@firebase\performance to=release_v2\win-unpacked\resources\app\node_modules\@firebase\performance filesCount=7
+  ??? identified module  dep=@firebase/performance-compat from=node_modules\@firebase\performance-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\performance-compat filesCount=6
+  ??? identified module  dep=@firebase/performance-types from=node_modules\@firebase\performance-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\performance-types filesCount=1
+  ??? identified module  dep=@firebase/remote-config from=node_modules\@firebase\remote-config to=release_v2\win-unpacked\resources\app\node_modules\@firebase\remote-config filesCount=7
+  ??? identified module  dep=@firebase/remote-config-compat from=node_modules\@firebase\remote-config-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\remote-config-compat filesCount=6
+  ??? identified module  dep=@firebase/remote-config-types from=node_modules\@firebase\remote-config-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\remote-config-types filesCount=1
+  ??? identified module  dep=@firebase/storage from=node_modules\@firebase\storage to=release_v2\win-unpacked\resources\app\node_modules\@firebase\storage filesCount=13
+  ??? identified module  dep=@firebase/storage-compat from=node_modules\@firebase\storage-compat to=release_v2\win-unpacked\resources\app\node_modules\@firebase\storage-compat filesCount=6
+  ??? identified module  dep=@firebase/storage-types from=node_modules\@firebase\storage-types to=release_v2\win-unpacked\resources\app\node_modules\@firebase\storage-types filesCount=1
+  ??? identified module  dep=@firebase/util from=node_modules\@firebase\util to=release_v2\win-unpacked\resources\app\node_modules\@firebase\util filesCount=14
+  ??? identified module  dep=@firebase/webchannel-wrapper from=node_modules\@firebase\webchannel-wrapper to=release_v2\win-unpacked\resources\app\node_modules\@firebase\webchannel-wrapper filesCount=14
+  ??? identified module  dep=@grpc/grpc-js from=node_modules\@grpc\grpc-js to=release_v2\win-unpacked\resources\app\node_modules\@grpc\grpc-js filesCount=324
+  ??? identified module  dep=@grpc/proto-loader from=node_modules\@grpc\proto-loader to=release_v2\win-unpacked\resources\app\node_modules\@grpc\proto-loader filesCount=8
+  ??? identified module  dep=@protobufjs/aspromise from=node_modules\@protobufjs\aspromise to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\aspromise filesCount=3
+  ??? identified module  dep=@protobufjs/base64 from=node_modules\@protobufjs\base64 to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\base64 filesCount=3
+  ??? identified module  dep=@protobufjs/codegen from=node_modules\@protobufjs\codegen to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\codegen filesCount=3
+  ??? identified module  dep=@protobufjs/eventemitter from=node_modules\@protobufjs\eventemitter to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\eventemitter filesCount=3
+  ??? identified module  dep=@protobufjs/fetch from=node_modules\@protobufjs\fetch to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\fetch filesCount=3
+  ??? identified module  dep=@protobufjs/float from=node_modules\@protobufjs\float to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\float filesCount=5
+  ??? identified module  dep=@protobufjs/inquire from=node_modules\@protobufjs\inquire to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\inquire filesCount=3
+  ??? identified module  dep=@protobufjs/path from=node_modules\@protobufjs\path to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\path filesCount=3
+  ??? identified module  dep=@protobufjs/pool from=node_modules\@protobufjs\pool to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\pool filesCount=3
+  ??? identified module  dep=@protobufjs/utf8 from=node_modules\@protobufjs\utf8 to=release_v2\win-unpacked\resources\app\node_modules\@protobufjs\utf8 filesCount=3
+  ??? identified module  dep=@socket.io/component-emitter from=node_modules\@socket.io\component-emitter to=release_v2\win-unpacked\resources\app\node_modules\@socket.io\component-emitter filesCount=6
+  ??? identified module  dep=@types/cors from=node_modules\@types\cors to=release_v2\win-unpacked\resources\app\node_modules\@types\cors filesCount=2
+  ??? identified module  dep=@types/node from=node_modules\@types\node to=release_v2\win-unpacked\resources\app\node_modules\@types\node filesCount=2
+  ??? identified module  dep=accepts from=node_modules\engine.io\node_modules\accepts to=release_v2\win-unpacked\resources\app\node_modules\accepts filesCount=4
+  ??? identified module  dep=mime-types from=node_modules\engine.io\node_modules\mime-types to=release_v2\win-unpacked\resources\app\node_modules\accepts\node_modules\mime-types filesCount=4
+  ??? identified module  dep=negotiator from=node_modules\engine.io\node_modules\negotiator to=release_v2\win-unpacked\resources\app\node_modules\accepts\node_modules\negotiator filesCount=8
+  ??? identified module  dep=ansi-regex from=node_modules\ansi-regex to=release_v2\win-unpacked\resources\app\node_modules\ansi-regex filesCount=3
+  ??? identified module  dep=ansi-styles from=node_modules\ansi-styles to=release_v2\win-unpacked\resources\app\node_modules\ansi-styles filesCount=3
+  ??? identified module  dep=asynckit from=node_modules\asynckit to=release_v2\win-unpacked\resources\app\node_modules\asynckit filesCount=19
+  ??? identified module  dep=axios from=node_modules\axios to=release_v2\win-unpacked\resources\app\node_modules\axios filesCount=83
+  ??? identified module  dep=base64-js from=node_modules\base64-js to=release_v2\win-unpacked\resources\app\node_modules\base64-js filesCount=4
+  ??? identified module  dep=base64id from=node_modules\base64id to=release_v2\win-unpacked\resources\app\node_modules\base64id filesCount=3
+  ??? identified module  dep=better-sqlite3 from=node_modules\better-sqlite3 to=release_v2\win-unpacked\resources\app\node_modules\better-sqlite3 filesCount=48
+  ??? identified module  dep=bindings from=node_modules\bindings to=release_v2\win-unpacked\resources\app\node_modules\bindings filesCount=3
+  ??? identified module  dep=bl from=node_modules\bl to=release_v2\win-unpacked\resources\app\node_modules\bl filesCount=4
+  ??? identified module  dep=body-parser from=node_modules\body-parser to=release_v2\win-unpacked\resources\app\node_modules\body-parser filesCount=9
+  ??? identified module  dep=iconv-lite from=node_modules\raw-body\node_modules\iconv-lite to=release_v2\win-unpacked\resources\app\node_modules\body-parser\node_modules\iconv-lite filesCount=24
+  ??? identified module  dep=boolbase from=node_modules\boolbase to=release_v2\win-unpacked\resources\app\node_modules\boolbase filesCount=2
+  ??? identified module  dep=buffer from=node_modules\buffer to=release_v2\win-unpacked\resources\app\node_modules\buffer filesCount=4
+  ??? identified module  dep=bytes from=node_modules\bytes to=release_v2\win-unpacked\resources\app\node_modules\bytes filesCount=4
+  ??? identified module  dep=call-bind-apply-helpers from=node_modules\call-bind-apply-helpers to=release_v2\win-unpacked\resources\app\node_modules\call-bind-apply-helpers filesCount=10
+  ??? identified module  dep=call-bound from=node_modules\call-bound to=release_v2\win-unpacked\resources\app\node_modules\call-bound filesCount=5
+  ??? identified module  dep=cheerio from=node_modules\cheerio to=release_v2\win-unpacked\resources\app\node_modules\cheerio filesCount=176
+  ??? identified module  dep=cheerio-select from=node_modules\cheerio-select to=release_v2\win-unpacked\resources\app\node_modules\cheerio-select filesCount=21
+  ??? identified module  dep=chownr from=node_modules\tar-fs\node_modules\chownr to=release_v2\win-unpacked\resources\app\node_modules\chownr filesCount=3
+  ??? identified module  dep=cliui from=node_modules\cliui to=release_v2\win-unpacked\resources\app\node_modules\cliui filesCount=7
+  ??? identified module  dep=clsx from=node_modules\clsx to=release_v2\win-unpacked\resources\app\node_modules\clsx filesCount=8
+  ??? identified module  dep=color-convert from=node_modules\color-convert to=release_v2\win-unpacked\resources\app\node_modules\color-convert filesCount=5
+  ??? identified module  dep=color-name from=node_modules\color-name to=release_v2\win-unpacked\resources\app\node_modules\color-name filesCount=3
+  ??? identified module  dep=combined-stream from=node_modules\combined-stream to=release_v2\win-unpacked\resources\app\node_modules\combined-stream filesCount=3
+  ??? identified module  dep=content-disposition from=node_modules\content-disposition to=release_v2\win-unpacked\resources\app\node_modules\content-disposition filesCount=4
+  ??? identified module  dep=content-type from=node_modules\content-type to=release_v2\win-unpacked\resources\app\node_modules\content-type filesCount=4
+  ??? identified module  dep=cookie from=node_modules\cookie to=release_v2\win-unpacked\resources\app\node_modules\cookie filesCount=4
+  ??? identified module  dep=cookie-signature from=node_modules\cookie-signature to=release_v2\win-unpacked\resources\app\node_modules\cookie-signature filesCount=4
+  ??? identified module  dep=cors from=node_modules\cors to=release_v2\win-unpacked\resources\app\node_modules\cors filesCount=3
+  ??? identified module  dep=css-select from=node_modules\css-select to=release_v2\win-unpacked\resources\app\node_modules\css-select filesCount=87
+  ??? identified module  dep=css-what from=node_modules\css-what to=release_v2\win-unpacked\resources\app\node_modules\css-what filesCount=18
+  ??? identified module  dep=debug from=node_modules\debug to=release_v2\win-unpacked\resources\app\node_modules\debug filesCount=6
+  ??? identified module  dep=decompress-response from=node_modules\decompress-response to=release_v2\win-unpacked\resources\app\node_modules\decompress-response filesCount=3
+  ??? identified module  dep=deep-extend from=node_modules\deep-extend to=release_v2\win-unpacked\resources\app\node_modules\deep-extend filesCount=4
+  ??? identified module  dep=delayed-stream from=node_modules\delayed-stream to=release_v2\win-unpacked\resources\app\node_modules\delayed-stream filesCount=4
+  ??? identified module  dep=depd from=node_modules\depd to=release_v2\win-unpacked\resources\app\node_modules\depd filesCount=5
+  ??? identified module  dep=detect-libc from=node_modules\detect-libc to=release_v2\win-unpacked\resources\app\node_modules\detect-libc filesCount=6
+  ??? identified module  dep=dom-serializer from=node_modules\dom-serializer to=release_v2\win-unpacked\resources\app\node_modules\dom-serializer filesCount=11
+  ??? identified module  dep=domelementtype from=node_modules\domelementtype to=release_v2\win-unpacked\resources\app\node_modules\domelementtype filesCount=7
+  ??? identified module  dep=domhandler from=node_modules\domhandler to=release_v2\win-unpacked\resources\app\node_modules\domhandler filesCount=11
+  ??? identified module  dep=domutils from=node_modules\domutils to=release_v2\win-unpacked\resources\app\node_modules\domutils filesCount=51
+  ??? identified module  dep=dunder-proto from=node_modules\dunder-proto to=release_v2\win-unpacked\resources\app\node_modules\dunder-proto filesCount=6
+  ??? identified module  dep=ee-first from=node_modules\ee-first to=release_v2\win-unpacked\resources\app\node_modules\ee-first filesCount=3
+  ??? identified module  dep=emoji-regex from=node_modules\emoji-regex to=release_v2\win-unpacked\resources\app\node_modules\emoji-regex filesCount=6
+  ??? identified module  dep=encodeurl from=node_modules\encodeurl to=release_v2\win-unpacked\resources\app\node_modules\encodeurl filesCount=3
+  ??? identified module  dep=encoding-sniffer from=node_modules\encoding-sniffer to=release_v2\win-unpacked\resources\app\node_modules\encoding-sniffer filesCount=17
+  ??? identified module  dep=end-of-stream from=node_modules\end-of-stream to=release_v2\win-unpacked\resources\app\node_modules\end-of-stream filesCount=3
+  ??? identified module  dep=engine.io from=node_modules\engine.io to=release_v2\win-unpacked\resources\app\node_modules\engine.io filesCount=19
+  ??? identified module  dep=engine.io-parser from=node_modules\engine.io-parser to=release_v2\win-unpacked\resources\app\node_modules\engine.io-parser filesCount=18
+  ??? identified module  dep=entities from=node_modules\entities to=release_v2\win-unpacked\resources\app\node_modules\entities filesCount=51
+  ??? identified module  dep=es-define-property from=node_modules\es-define-property to=release_v2\win-unpacked\resources\app\node_modules\es-define-property filesCount=5
+  ??? identified module  dep=es-errors from=node_modules\es-errors to=release_v2\win-unpacked\resources\app\node_modules\es-errors filesCount=10
+  ??? identified module  dep=es-object-atoms from=node_modules\es-object-atoms to=release_v2\win-unpacked\resources\app\node_modules\es-object-atoms filesCount=7
+  ??? identified module  dep=es-set-tostringtag from=node_modules\es-set-tostringtag to=release_v2\win-unpacked\resources\app\node_modules\es-set-tostringtag filesCount=5
+  ??? identified module  dep=escalade from=node_modules\escalade to=release_v2\win-unpacked\resources\app\node_modules\escalade filesCount=8
+  ??? identified module  dep=escape-html from=node_modules\escape-html to=release_v2\win-unpacked\resources\app\node_modules\escape-html filesCount=3
+  ??? identified module  dep=etag from=node_modules\etag to=release_v2\win-unpacked\resources\app\node_modules\etag filesCount=4
+  ??? identified module  dep=expand-template from=node_modules\expand-template to=release_v2\win-unpacked\resources\app\node_modules\expand-template filesCount=4
+  ??? identified module  dep=express from=node_modules\express to=release_v2\win-unpacked\resources\app\node_modules\express filesCount=9
+  ??? identified module  dep=accepts from=node_modules\accepts to=release_v2\win-unpacked\resources\app\node_modules\express\node_modules\accepts filesCount=4
+  ??? identified module  dep=faye-websocket from=node_modules\faye-websocket to=release_v2\win-unpacked\resources\app\node_modules\faye-websocket filesCount=8
+  ??? identified module  dep=file-uri-to-path from=node_modules\file-uri-to-path to=release_v2\win-unpacked\resources\app\node_modules\file-uri-to-path filesCount=4
+  ??? identified module  dep=finalhandler from=node_modules\finalhandler to=release_v2\win-unpacked\resources\app\node_modules\finalhandler filesCount=4
+  ??? identified module  dep=firebase from=node_modules\firebase to=release_v2\win-unpacked\resources\app\node_modules\firebase filesCount=332
+  ??? identified module  dep=follow-redirects from=node_modules\follow-redirects to=release_v2\win-unpacked\resources\app\node_modules\follow-redirects filesCount=6
+  ??? identified module  dep=form-data from=node_modules\form-data to=release_v2\win-unpacked\resources\app\node_modules\form-data filesCount=5
+  ??? identified module  dep=mime-types from=node_modules\engine.io\node_modules\mime-types to=release_v2\win-unpacked\resources\app\node_modules\form-data\node_modules\mime-types filesCount=4
+  ??? identified module  dep=forwarded from=node_modules\forwarded to=release_v2\win-unpacked\resources\app\node_modules\forwarded filesCount=4
+  ??? identified module  dep=fresh from=node_modules\fresh to=release_v2\win-unpacked\resources\app\node_modules\fresh filesCount=4
+  ??? identified module  dep=fs-constants from=node_modules\fs-constants to=release_v2\win-unpacked\resources\app\node_modules\fs-constants filesCount=4
+  ??? identified module  dep=function-bind from=node_modules\function-bind to=release_v2\win-unpacked\resources\app\node_modules\function-bind filesCount=5
+  ??? identified module  dep=get-caller-file from=node_modules\get-caller-file to=release_v2\win-unpacked\resources\app\node_modules\get-caller-file filesCount=4
+  ??? identified module  dep=get-intrinsic from=node_modules\get-intrinsic to=release_v2\win-unpacked\resources\app\node_modules\get-intrinsic filesCount=4
+  ??? identified module  dep=get-proto from=node_modules\get-proto to=release_v2\win-unpacked\resources\app\node_modules\get-proto filesCount=7
+  ??? identified module  dep=github-from-package from=node_modules\github-from-package to=release_v2\win-unpacked\resources\app\node_modules\github-from-package filesCount=3
+  ??? identified module  dep=gopd from=node_modules\gopd to=release_v2\win-unpacked\resources\app\node_modules\gopd filesCount=5
+  ??? identified module  dep=has-symbols from=node_modules\has-symbols to=release_v2\win-unpacked\resources\app\node_modules\has-symbols filesCount=6
+  ??? identified module  dep=has-tostringtag from=node_modules\has-tostringtag to=release_v2\win-unpacked\resources\app\node_modules\has-tostringtag filesCount=6
+  ??? identified module  dep=hasown from=node_modules\hasown to=release_v2\win-unpacked\resources\app\node_modules\hasown filesCount=5
+  ??? identified module  dep=htmlparser2 from=node_modules\htmlparser2 to=release_v2\win-unpacked\resources\app\node_modules\htmlparser2 filesCount=33
+  ??? identified module  dep=entities from=node_modules\htmlparser2\node_modules\entities to=release_v2\win-unpacked\resources\app\node_modules\htmlparser2\node_modules\entities filesCount=84
+  ??? identified module  dep=http-errors from=node_modules\http-errors to=release_v2\win-unpacked\resources\app\node_modules\http-errors filesCount=4
+  ??? identified module  dep=http-parser-js from=node_modules\http-parser-js to=release_v2\win-unpacked\resources\app\node_modules\http-parser-js filesCount=3
+  ??? identified module  dep=iconv-lite from=node_modules\iconv-lite to=release_v2\win-unpacked\resources\app\node_modules\iconv-lite filesCount=23
+  ??? identified module  dep=idb from=node_modules\idb to=release_v2\win-unpacked\resources\app\node_modules\idb filesCount=12
+  ??? identified module  dep=ieee754 from=node_modules\ieee754 to=release_v2\win-unpacked\resources\app\node_modules\ieee754 filesCount=3
+  ??? identified module  dep=inherits from=node_modules\inherits to=release_v2\win-unpacked\resources\app\node_modules\inherits filesCount=4
+  ??? identified module  dep=ini from=node_modules\ini to=release_v2\win-unpacked\resources\app\node_modules\ini filesCount=3
+  ??? identified module  dep=ipaddr.js from=node_modules\ipaddr.js to=release_v2\win-unpacked\resources\app\node_modules\ipaddr.js filesCount=4
+  ??? identified module  dep=is-fullwidth-code-point from=node_modules\is-fullwidth-code-point to=release_v2\win-unpacked\resources\app\node_modules\is-fullwidth-code-point filesCount=3
+  ??? identified module  dep=is-promise from=node_modules\is-promise to=release_v2\win-unpacked\resources\app\node_modules\is-promise filesCount=4
+  ??? identified module  dep=js-tokens from=node_modules\js-tokens to=release_v2\win-unpacked\resources\app\node_modules\js-tokens filesCount=3
+  ??? identified module  dep=lodash.camelcase from=node_modules\lodash.camelcase to=release_v2\win-unpacked\resources\app\node_modules\lodash.camelcase filesCount=3
+  ??? identified module  dep=long from=node_modules\long to=release_v2\win-unpacked\resources\app\node_modules\long filesCount=5
+  ??? identified module  dep=loose-envify from=node_modules\loose-envify to=release_v2\win-unpacked\resources\app\node_modules\loose-envify filesCount=7
+  ??? identified module  dep=math-intrinsics from=node_modules\math-intrinsics to=release_v2\win-unpacked\resources\app\node_modules\math-intrinsics filesCount=18
+  ??? identified module  dep=media-typer from=node_modules\media-typer to=release_v2\win-unpacked\resources\app\node_modules\media-typer filesCount=4
+  ??? identified module  dep=merge-descriptors from=node_modules\merge-descriptors to=release_v2\win-unpacked\resources\app\node_modules\merge-descriptors filesCount=3
+  ??? identified module  dep=mime-db from=node_modules\engine.io\node_modules\mime-db to=release_v2\win-unpacked\resources\app\node_modules\mime-db filesCount=5
+  ??? identified module  dep=mime-types from=node_modules\mime-types to=release_v2\win-unpacked\resources\app\node_modules\mime-types filesCount=5
+  ??? identified module  dep=mime-db from=node_modules\mime-db to=release_v2\win-unpacked\resources\app\node_modules\mime-types\node_modules\mime-db filesCount=5
+  ??? identified module  dep=mimic-response from=node_modules\decompress-response\node_modules\mimic-response to=release_v2\win-unpacked\resources\app\node_modules\mimic-response filesCount=3
+  ??? identified module  dep=minimist from=node_modules\minimist to=release_v2\win-unpacked\resources\app\node_modules\minimist filesCount=4
+  ??? identified module  dep=mkdirp-classic from=node_modules\mkdirp-classic to=release_v2\win-unpacked\resources\app\node_modules\mkdirp-classic filesCount=3
+  ??? identified module  dep=ms from=node_modules\ms to=release_v2\win-unpacked\resources\app\node_modules\ms filesCount=3
+  ??? identified module  dep=napi-build-utils from=node_modules\napi-build-utils to=release_v2\win-unpacked\resources\app\node_modules\napi-build-utils filesCount=4
+  ??? identified module  dep=negotiator from=node_modules\negotiator to=release_v2\win-unpacked\resources\app\node_modules\negotiator filesCount=8
+  ??? identified module  dep=node-abi from=node_modules\prebuild-install\node_modules\node-abi to=release_v2\win-unpacked\resources\app\node_modules\node-abi filesCount=4
+  ??? identified module  dep=nth-check from=node_modules\nth-check to=release_v2\win-unpacked\resources\app\node_modules\nth-check filesCount=21
+  ??? identified module  dep=object-assign from=node_modules\object-assign to=release_v2\win-unpacked\resources\app\node_modules\object-assign filesCount=3
+  ??? identified module  dep=object-inspect from=node_modules\object-inspect to=release_v2\win-unpacked\resources\app\node_modules\object-inspect filesCount=7
+  ??? identified module  dep=on-finished from=node_modules\on-finished to=release_v2\win-unpacked\resources\app\node_modules\on-finished filesCount=4
+  ??? identified module  dep=once from=node_modules\once to=release_v2\win-unpacked\resources\app\node_modules\once filesCount=3
+  ??? identified module  dep=parse5 from=node_modules\parse5 to=release_v2\win-unpacked\resources\app\node_modules\parse5 filesCount=33
+  ??? identified module  dep=entities from=node_modules\parse5\node_modules\entities to=release_v2\win-unpacked\resources\app\node_modules\parse5\node_modules\entities filesCount=67
+  ??? identified module  dep=parse5-htmlparser2-tree-adapter from=node_modules\parse5-htmlparser2-tree-adapter to=release_v2\win-unpacked\resources\app\node_modules\parse5-htmlparser2-tree-adapter filesCount=5
+  ??? identified module  dep=parse5-parser-stream from=node_modules\parse5-parser-stream to=release_v2\win-unpacked\resources\app\node_modules\parse5-parser-stream filesCount=5
+  ??? identified module  dep=parseurl from=node_modules\parseurl to=release_v2\win-unpacked\resources\app\node_modules\parseurl filesCount=4
+  ??? identified module  dep=path-to-regexp from=node_modules\path-to-regexp to=release_v2\win-unpacked\resources\app\node_modules\path-to-regexp filesCount=4
+  ??? identified module  dep=prebuild-install from=node_modules\prebuild-install to=release_v2\win-unpacked\resources\app\node_modules\prebuild-install filesCount=13
+  ??? identified module  dep=prop-types from=node_modules\prop-types to=release_v2\win-unpacked\resources\app\node_modules\prop-types filesCount=11
+  ??? identified module  dep=protobufjs from=node_modules\protobufjs to=release_v2\win-unpacked\resources\app\node_modules\protobufjs filesCount=72
+  ??? identified module  dep=proxy-addr from=node_modules\proxy-addr to=release_v2\win-unpacked\resources\app\node_modules\proxy-addr filesCount=4
+  ??? identified module  dep=proxy-from-env from=node_modules\proxy-from-env to=release_v2\win-unpacked\resources\app\node_modules\proxy-from-env filesCount=4
+  ??? identified module  dep=pump from=node_modules\pump to=release_v2\win-unpacked\resources\app\node_modules\pump filesCount=6
+  ??? identified module  dep=qr.js from=node_modules\qr.js to=release_v2\win-unpacked\resources\app\node_modules\qr.js filesCount=13
+  ??? identified module  dep=qs from=node_modules\qs to=release_v2\win-unpacked\resources\app\node_modules\qs filesCount=11
+  ??? identified module  dep=range-parser from=node_modules\range-parser to=release_v2\win-unpacked\resources\app\node_modules\range-parser filesCount=4
+  ??? identified module  dep=raw-body from=node_modules\raw-body to=release_v2\win-unpacked\resources\app\node_modules\raw-body filesCount=3
+  ??? identified module  dep=iconv-lite from=node_modules\raw-body\node_modules\iconv-lite to=release_v2\win-unpacked\resources\app\node_modules\raw-body\node_modules\iconv-lite filesCount=24
+  ??? identified module  dep=rc from=node_modules\rc to=release_v2\win-unpacked\resources\app\node_modules\rc filesCount=8
+  ??? identified module  dep=react from=node_modules\react to=release_v2\win-unpacked\resources\app\node_modules\react filesCount=26
+  ??? identified module  dep=react-dom from=node_modules\react-dom to=release_v2\win-unpacked\resources\app\node_modules\react-dom filesCount=42
+  ??? identified module  dep=react-is from=node_modules\react-is to=release_v2\win-unpacked\resources\app\node_modules\react-is filesCount=8
+  ??? identified module  dep=react-qr-code from=node_modules\react-qr-code to=release_v2\win-unpacked\resources\app\node_modules\react-qr-code filesCount=5
+  ??? identified module  dep=readable-stream from=node_modules\readable-stream to=release_v2\win-unpacked\resources\app\node_modules\readable-stream filesCount=24
+  ??? identified module  dep=require-directory from=node_modules\require-directory to=release_v2\win-unpacked\resources\app\node_modules\require-directory filesCount=4
+  ??? identified module  dep=router from=node_modules\router to=release_v2\win-unpacked\resources\app\node_modules\router filesCount=6
+  ??? identified module  dep=safe-buffer from=node_modules\safe-buffer to=release_v2\win-unpacked\resources\app\node_modules\safe-buffer filesCount=3
+  ??? identified module  dep=safer-buffer from=node_modules\safer-buffer to=release_v2\win-unpacked\resources\app\node_modules\safer-buffer filesCount=6
+  ??? identified module  dep=scheduler from=node_modules\scheduler to=release_v2\win-unpacked\resources\app\node_modules\scheduler filesCount=14
+  ??? identified module  dep=semver from=node_modules\semver to=release_v2\win-unpacked\resources\app\node_modules\semver filesCount=51
+  ??? identified module  dep=send from=node_modules\send to=release_v2\win-unpacked\resources\app\node_modules\send filesCount=3
+  ??? identified module  dep=serve-static from=node_modules\serve-static to=release_v2\win-unpacked\resources\app\node_modules\serve-static filesCount=3
+  ??? identified module  dep=setprototypeof from=node_modules\setprototypeof to=release_v2\win-unpacked\resources\app\node_modules\setprototypeof filesCount=3
+  ??? identified module  dep=side-channel from=node_modules\side-channel to=release_v2\win-unpacked\resources\app\node_modules\side-channel filesCount=6
+  ??? identified module  dep=side-channel-list from=node_modules\side-channel-list to=release_v2\win-unpacked\resources\app\node_modules\side-channel-list filesCount=6
+  ??? identified module  dep=side-channel-map from=node_modules\side-channel-map to=release_v2\win-unpacked\resources\app\node_modules\side-channel-map filesCount=6
+  ??? identified module  dep=side-channel-weakmap from=node_modules\side-channel-weakmap to=release_v2\win-unpacked\resources\app\node_modules\side-channel-weakmap filesCount=6
+  ??? identified module  dep=simple-concat from=node_modules\simple-concat to=release_v2\win-unpacked\resources\app\node_modules\simple-concat filesCount=3
+  ??? identified module  dep=simple-get from=node_modules\simple-get to=release_v2\win-unpacked\resources\app\node_modules\simple-get filesCount=3
+  ??? identified module  dep=socket.io from=node_modules\socket.io to=release_v2\win-unpacked\resources\app\node_modules\socket.io filesCount=20
+  ??? identified module  dep=socket.io-adapter from=node_modules\socket.io-adapter to=release_v2\win-unpacked\resources\app\node_modules\socket.io-adapter filesCount=6
+  ??? identified module  dep=socket.io-parser from=node_modules\socket.io-parser to=release_v2\win-unpacked\resources\app\node_modules\socket.io-parser filesCount=14
+  ??? identified module  dep=statuses from=node_modules\statuses to=release_v2\win-unpacked\resources\app\node_modules\statuses filesCount=5
+  ??? identified module  dep=string_decoder from=node_modules\string_decoder to=release_v2\win-unpacked\resources\app\node_modules\string_decoder filesCount=3
+  ??? identified module  dep=string-width from=node_modules\string-width to=release_v2\win-unpacked\resources\app\node_modules\string-width filesCount=3
+  ??? identified module  dep=strip-ansi from=node_modules\strip-ansi to=release_v2\win-unpacked\resources\app\node_modules\strip-ansi filesCount=3
+  ??? identified module  dep=strip-json-comments from=node_modules\strip-json-comments to=release_v2\win-unpacked\resources\app\node_modules\strip-json-comments filesCount=3
+  ??? identified module  dep=tailwind-merge from=node_modules\tailwind-merge to=release_v2\win-unpacked\resources\app\node_modules\tailwind-merge filesCount=27
+  ??? identified module  dep=tar-fs from=node_modules\tar-fs to=release_v2\win-unpacked\resources\app\node_modules\tar-fs filesCount=3
+  ??? identified module  dep=tar-stream from=node_modules\tar-stream to=release_v2\win-unpacked\resources\app\node_modules\tar-stream filesCount=7
+  ??? identified module  dep=toidentifier from=node_modules\toidentifier to=release_v2\win-unpacked\resources\app\node_modules\toidentifier filesCount=4
+  ??? identified module  dep=tslib from=node_modules\tslib to=release_v2\win-unpacked\resources\app\node_modules\tslib filesCount=11
+  ??? identified module  dep=tunnel-agent from=node_modules\tunnel-agent to=release_v2\win-unpacked\resources\app\node_modules\tunnel-agent filesCount=3
+  ??? identified module  dep=type-is from=node_modules\type-is to=release_v2\win-unpacked\resources\app\node_modules\type-is filesCount=4
+  ??? identified module  dep=undici from=node_modules\undici to=release_v2\win-unpacked\resources\app\node_modules\undici filesCount=156
+  ??? identified module  dep=undici-types from=node_modules\undici-types to=release_v2\win-unpacked\resources\app\node_modules\undici-types filesCount=2
+  ??? identified module  dep=unpipe from=node_modules\unpipe to=release_v2\win-unpacked\resources\app\node_modules\unpipe filesCount=4
+  ??? identified module  dep=util-deprecate from=node_modules\util-deprecate to=release_v2\win-unpacked\resources\app\node_modules\util-deprecate filesCount=5
+  ??? identified module  dep=vary from=node_modules\vary to=release_v2\win-unpacked\resources\app\node_modules\vary filesCount=4
+  ??? identified module  dep=web-vitals from=node_modules\web-vitals to=release_v2\win-unpacked\resources\app\node_modules\web-vitals filesCount=97
+  ??? identified module  dep=websocket-driver from=node_modules\websocket-driver to=release_v2\win-unpacked\resources\app\node_modules\websocket-driver filesCount=16
+  ??? identified module  dep=websocket-extensions from=node_modules\websocket-extensions to=release_v2\win-unpacked\resources\app\node_modules\websocket-extensions filesCount=10
+  ??? identified module  dep=whatwg-encoding from=node_modules\whatwg-encoding to=release_v2\win-unpacked\resources\app\node_modules\whatwg-encoding filesCount=5
+  ??? identified module  dep=whatwg-mimetype from=node_modules\whatwg-mimetype to=release_v2\win-unpacked\resources\app\node_modules\whatwg-mimetype filesCount=7
+  ??? identified module  dep=wrap-ansi from=node_modules\wrap-ansi to=release_v2\win-unpacked\resources\app\node_modules\wrap-ansi filesCount=3
+  ??? identified module  dep=wrappy from=node_modules\wrappy to=release_v2\win-unpacked\resources\app\node_modules\wrappy filesCount=3
+  ??? identified module  dep=ws from=node_modules\ws to=release_v2\win-unpacked\resources\app\node_modules\ws filesCount=18
+  ??? identified module  dep=y18n from=node_modules\y18n to=release_v2\win-unpacked\resources\app\node_modules\y18n filesCount=7
+  ??? identified module  dep=yargs from=node_modules\yargs to=release_v2\win-unpacked\resources\app\node_modules\yargs filesCount=60
+  ??? identified module  dep=yargs-parser from=node_modules\yargs-parser to=release_v2\win-unpacked\resources\app\node_modules\yargs-parser filesCount=9
+  ??? not packed into asar archive  file=node_modules\better-sqlite3\build\Release\better_sqlite3.node reason=contains executable code
+  ??? updating asar integrity executable resource  executablePath=release_v2\win-unpacked\LyriX Church System.exe
+  ??? spawning        command=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-bin\win\x64\app-builder.exe icon --format ico --root C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\build --root C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop --out C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\.icon-ico --input public/icon.ico
+  ??? path doesn't exist  path=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\build\public\icon.ico
+  ??? path resolved   path=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico outputFormat=ico
+  ??? exited          command=app-builder.exe code=0 pid=5780 out={"icons":[{"file":"C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\public\\icon.ico","size":256}],"isFallback":false}
+  ??? spawning        command=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-bin\win\x64\app-builder.exe rcedit --args ["C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\release_v2\\win-unpacked\\LyriX Church System.exe","--set-version-string","FileDescription","LyriX Church System","--set-version-string","ProductName","LyriX Church System","--set-version-string","LegalCopyright","Copyright ?? 2026 LyriX Church System","--set-file-version","1.0.0","--set-p 665b5d64e2a77df9d9fda120d25126611f940090772478fb79c8478f7d4a81f8 (sha256 hash) (sha256 hash) Church System","--set-version-string","OriginalFilename","","--set-icon","C:\\Users\\BODDU_VAMSI\\.gemini\\antigravity\\scratch\\ChurchLyricsSystem\\desktop\\public\\icon.ico"]
+  ??? computing effective URL  initialUrl=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z
+                             currentUrl=https://release-assets.githubusercontent.com/github-production-release-asset/65527128/f73f2200-5d53-11ea-8264-ddd345f11ee4?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-02-22T16%3A53%3A32Z&rscd=attachment%3B+filename%3DwinCodeSign-2.6.0.7z&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-02-22T15%3A52%3A36Z&ske=2026-02-22T16%3A53%3A32Z&sks=b&skv=2018-11-09&sig=sPGryj%2BXj%2Bpbex7iOZbN55GZwymgTkRiJ8G1pcGxxMs%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3MTc3NTk5NCwibmJmIjoxNzcxNzc1Njk0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.7P-MJs-2nAcEh3VsIjxCMXoPZH7Cl49yaiCt2edcwwE&response-content-disposition=attachment%3B%20filename%3DwinCodeSign-2.6.0.7z&response-content-type=application%2Foctet-stream
+  ??? downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z length=5635384 contentType=application/octet-stream
+  ??? downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z size=5.6 MB parts=1
+  ??? map async       taskCount=1
+  ??? download part   range=bytes=0-5635383 index=0
+  ??? downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z duration=545ms
+  ??? execute command  command='C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\7zip-bin\win\x64\7za.exe' x -snld -bd 'C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\winCodeSign\681794011.7z' '-oC:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\winCodeSign\681794011'
+                     workingDirectory=C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\winCodeSign
+  ??? command executed  executable=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\7zip-bin\win\x64\7za.exe
+                      out=
+    7-Zip (a) 21.07 (x64) : Copyright (c) 1999-2021 Igor Pavlov : 2021-12-26
+    
+    Scanning the drive for archives:
+    1 file, 5635384 bytes (5504 KiB)
+    
+    Extracting archive: C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\winCodeSign\681794011.7z
+    --
+    Path = C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\winCodeSign\681794011.7z
+    Type = 7z
+    Physical Size = 5635384
+    Headers Size = 1492
+    Method = LZMA2:24m LZMA:20 BCJ2
+    Solid = +
+    Blocks = 2
+    
+    Everything is Ok
+    
+    Folders: 13
+    Files: 83
+    Size:       24762883
+    Compressed: 5635384
+    
+  ??? execute command  command='C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\winCodeSign\winCodeSign-2.6.0\rcedit-x64.exe' 'C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\win-unpacked\LyriX Church System.exe' --set-version-string FileDescription 'LyriX Church System' --set-version-string ProductName 'LyriX Church System' --set-version-string LegalCopyright 'Copyright ?? 2026 LyriX Church System' --set-file-version 1.0.0 --set-product-version 1.0.0.0 --set-version-string InternalName 'LyriX Church System' --set-version-string OriginalFilename '' --set-icon 'C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico'
+                     workingDirectory=
+  ??? command executed  executable=C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\winCodeSign\winCodeSign-2.6.0\rcedit-x64.exe
+  ??? exited          command=app-builder.exe code=0 pid=8136
+  ??? signing with signtool.exe  path=release_v2\win-unpacked\LyriX Church System.exe
+  ??? no signing info identified, signing is skipped  signHook=false cscInfo=null
+wine&sign: 3s 657ms
+  ??? no event listeners found  event=afterSign
+  ??? building        target=nsis file=release_v2\LyriX Church System Setup 1.0.0.exe archs=x64 oneClick=false perMachine=false
+  ??? no event listeners found  event=artifactBuildStarted
+  ??? spawning        command=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-bin\win\x64\app-builder.exe download-artifact --name nsis-3.0.4.1-nsis-3.0.4.1 --url https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z --sha512 VKMiizYdmNdJOWpRGz4trl4lD++BvYP2irAXpMilheUP0pc93iKlWAoP843Vlraj8YG19CVn0j+dCo/hURz9+Q==
+  ??? computing effective URL  initialUrl=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z
+                             currentUrl=https://release-assets.githubusercontent.com/github-production-release-asset/65527128/10518a80-10f6-11ea-8d2f-403bab81b4cd?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-02-22T16%3A31%3A43Z&rscd=attachment%3B+filename%3Dnsis-3.0.4.1.7z&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-02-22T15%3A31%3A31Z&ske=2026-02-22T16%3A31%3A43Z&sks=b&skv=2018-11-09&sig=drq38MWpbxYF3fbFSAbiHgbc7gnbbdaYsYLZbQa1DSM%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3MTc3NjA2NywibmJmIjoxNzcxNzc1NzY3LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.bPS-G5cVM6mS1JpqDGcVJKvwQo5fYHgfYOH4quZLnLA&response-content-disposition=attachment%3B%20filename%3Dnsis-3.0.4.1.7z&response-content-type=application%2Foctet-stream
+  ??? downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z length=1287512 contentType=application/octet-stream
+  ??? downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z size=1.3 MB parts=1
+  ??? map async       taskCount=1
+  ??? download part   range=bytes=0-1287511 index=0
+  ??? downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z duration=808ms
+  ??? execute command  command='C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\7zip-bin\win\x64\7za.exe' x -snld -bd 'C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\383530991.7z' '-oC:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\383530991'
+                     workingDirectory=C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis
+  ??? command executed  executable=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\7zip-bin\win\x64\7za.exe
+                      out=
+    7-Zip (a) 21.07 (x64) : Copyright (c) 1999-2021 Igor Pavlov : 2021-12-26
+    
+    Scanning the drive for archives:
+    1 file, 1287512 bytes (1258 KiB)
+    
+    Extracting archive: C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\383530991.7z
+    --
+    Path = C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\383530991.7z
+    Type = 7z
+    Physical Size = 1287512
+    Headers Size = 4285
+    Method = LZMA2:23 LZMA:20 BCJ2
+    Solid = +
+    Blocks = 2
+    
+    Everything is Ok
+    
+    Folders: 23
+    Files: 343
+    Size:       7280179
+    Compressed: 1287512
+    
+  ??? exited          command=app-builder.exe code=0 pid=8624 out=C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1
+  ??? signing with signtool.exe  path=release_v2\win-unpacked\resources\elevate.exe
+  ??? no signing info identified, signing is skipped  signHook=false cscInfo=null
+  ??? executing       file=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\7zip-bin\win\x64\7za.exe args=a -bd -mx=9 -md=1m -mtc=off -ms=off -mtm=off -mta=off C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\desktop-1.0.0-x64.nsis.7z . -xr!*.avi -xr!*.mov -xr!*.m4v -xr!*.mp4 -xr!*.m4p -xr!*.qt -xr!*.mkv -xr!*.webm -xr!*.vmdk cwd=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\win-unpacked
+nsis package, x64: 51s 602ms
+  ??? executing       file=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\7zip-bin\win\x64\7za.exe args=l C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\desktop-1.0.0-x64.nsis.7z
+  ??? executed        file=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\7zip-bin\win\x64\7za.exe stdout=
+7-Zip (a) 21.07 (x64) : Copyright (c) 1999-2021 Igor Pavlov : 2021-12-26
+                      Scanning the drive for archives:
+1 file, 255342637 bytes (244 MiB)
+                      Listing archive: C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\desktop-1.0.0-x64.nsis.7z
+                      --
+Path = C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\desktop-1.0.0-x64.nsis.7z
+Type = 7z
+Physical Size = 255342637
+Headers Size = 2380
+Method = LZMA2:20 LZMA:20 BCJ2
+Solid = -
+Blocks = 124
+                         Date      Time    Attr         Size   Compressed  Name
+------------------- ----- ------------ ------------  ------------------------
+                    D....            0            0  locales
+                    D....            0            0  resources
+                    D....            0            0  resources\app.asar.unpacked
+                    D....            0            0  resources\app.asar.unpacked\node_modules
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\build
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\build\Release
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\deps
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\patches
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\lib
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\src
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util
+                    ....A       114781       104902  chrome_100_percent.pak
+                    ....A       186658       173299  chrome_200_percent.pak
+                    ....A     10822192      3466059  icudtl.dat
+                    ....A         1096          690  LICENSE.electron.txt
+                    ....A     15981304       443682  LICENSES.chromium.html
+                    ....A       596607       142871  locales\af.pak
+                    ....A       969188       160980  locales\am.pak
+                    ....A      1072298       165869  locales\ar.pak
+                    ....A      1105607       160479  locales\bg.pak
+                    ....A      1426968       167222  locales\bn.pak
+                    ....A       672660       146173  locales\ca.pak
+                    ....A       698954       158335  locales\cs.pak
+                    ....A       628594       143209  locales\da.pak
+                    ....A       673735       151672  locales\de.pak
+                    ....A      1216547       168959  locales\el.pak
+                    ....A       543897       132581  locales\en-GB.pak
+                    ....A       550193       133131  locales\en-US.pak
+                    ....A       663040       145810  locales\es-419.pak
+                    ....A       660250       145102  locales\es.pak
+                    ....A       602773       147666  locales\et.pak
+                    ....A       998648       156989  locales\fa.pak
+                    ....A       613518       146289  locales\fi.pak
+                    ....A       697137       145789  locales\fil.pak
+                    ....A       717708       150966  locales\fr.pak
+                    ....A      1408655       165534  locales\gu.pak
+                    ....A       874757       153483  locales\he.pak
+                    ....A      1491335       171706  locales\hi.pak
+                    ....A       672892       152695  locales\hr.pak
+                    ....A       719633       159510  locales\hu.pak
+                    ....A       594046       132939  locales\id.pak
+                    ....A       651222       143799  locales\it.pak
+                    ....A       792848       138896  locales\ja.pak
+                    ....A      1615323       168607  locales\kn.pak
+                    ....A       672972       135148  locales\ko.pak
+                    ....A       731816       155671  locales\lt.pak
+                    ....A       728832       156779  locales\lv.pak
+                    ....A      1666333       172400  locales\ml.pak
+                    ....A      1378315       162417  locales\mr.pak
+                    ....A       625550       135401  locales\ms.pak
+                    ....A       600651       140076  locales\nb.pak
+                    ....A       625156       143568  locales\nl.pak
+                    ....A       698421       158008  locales\pl.pak
+                    ....A       654029       145556  locales\pt-BR.pak
+                    ....A       657293       144005  locales\pt-PT.pak
+                    ....A       681997       148479  locales\ro.pak
+                    ....A      1132781       168970  locales\ru.pak
+                    ....A       710307       161550  locales\sk.pak
+                    ....A       680528       152852  locales\sl.pak
+                    ....A      1046634       160453  locales\sr.pak
+                    ....A       606558       139945  locales\sv.pak
+                    ....A       641453       143867  locales\sw.pak
+                    ....A      1657455       168051  locales\ta.pak
+                    ....A      1531978       168733  locales\te.pak
+                    ....A      1286193       147159  locales\th.pak
+                    ....A       653335       145199  locales\tr.pak
+                    ....A      1139851       166804  locales\uk.pak
+                    ....A       983549       156897  locales\ur.pak
+                    ....A       775577       144830  locales\vi.pak
+                    ....A       556038       134607  locales\zh-CN.pak
+                    ....A       549385       132768  locales\zh-TW.pak
+                    ....A           95           95  resources\app-update.yml
+                    ....A    756496165    156747097  resources\app.asar
+                    ....A      1903104       826192  resources\app.asar.unpacked\node_modules\better-sqlite3\build\Release\better_sqlite3.node
+                    ....A         1584          576  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\common.gypi
+                    ....A          897          437  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\copy.js
+                    ....A         1128          424  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\defines.gypi
+                    ....A         3888         1703  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\download.sh
+                    ....A          597          271  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\patches\1208.patch
+                    ....A      9389807      1828487  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3\sqlite3.c
+                    ....A       671786       138794  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3\sqlite3.h
+                    ....A        38632         5873  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3\sqlite3ext.h
+                    ....A         2542          734  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3.gyp
+                    ....A          587          382  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\test_extension.c
+                    ....A         4149         1450  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\database.js
+                    ....A          110           87  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\index.js
+                    ....A         1932          775  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\aggregate.js
+                    ....A         2380          939  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\backup.js
+                    ....A         1396          594  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\function.js
+                    ....A          174          136  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\inspect.js
+                    ....A          536          332  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\pragma.js
+                    ....A          625          338  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\serialize.js
+                    ....A         7144         2055  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\table.js
+                    ....A         2792          987  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\transaction.js
+                    ....A         1145          351  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\wrappers.js
+                    ....A          717          371  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\sqlite-error.js
+                    ....A          331          247  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\util.js
+                    ....A         1078          687  resources\app.asar.unpacked\node_modules\better-sqlite3\LICENSE
+                    ....A          936          478  resources\app.asar.unpacked\node_modules\better-sqlite3\package.json
+                    ....A         1283          642  resources\app.asar.unpacked\node_modules\better-sqlite3\src\addon.cpp
+                    ....A         2856          890  resources\app.asar.unpacked\node_modules\better-sqlite3\src\better_sqlite3.cpp
+                    ....A         4146         1389  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\backup.cpp
+                    ....A          705          398  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\backup.hpp
+                    ....A        14178         3351  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\database.cpp
+                    ....A         3129         1142  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\database.hpp
+                    ....A         3339         1190  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\statement-iterator.cpp
+                    ....A         1391          661  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\statement-iterator.hpp
+                    ....A        13163         3087  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\statement.cpp
+                    ....A         1373          647  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\statement.hpp
+                    ....A         1587          695  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\bind-map.cpp
+                    ....A         6060         2009  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\binder.cpp
+                    ....A         9068         1608  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\constants.cpp
+                    ....A         3952         1103  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\custom-aggregate.cpp
+                    ....A         1550          756  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\custom-function.cpp
+                    ....A        14960         3889  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\custom-table.cpp
+                    ....A          460          269  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\data-converter.cpp
+                    ....A         9639         1699  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\data.cpp
+                    ....A         4433         1347  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\helpers.cpp
+                    ....A         3661         1050  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\macros.cpp
+                    ....A         4138          942  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\query-macros.cpp
+                    ....A         1017          469  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\row-builder.cpp
+                    ....A      6431310      6377684  resources.pak
+                    ....A       339863        51758  snapshot_blob.bin
+                    ....A       713034       113267  v8_context_snapshot.bin
+                    ....A          106           96  vk_swiftshader_icd.json
+                    ....A      4741480      1580277  d3dcompiler_47.dll
+                    ....A     25614848      6375467  dxcompiler.dll
+                    ....A      1503600       503580  dxil.dll
+                    ....A      3084288       953133  ffmpeg.dll
+                    ....A       506880       176614  libEGL.dll
+                    ....A      8004096      2235265  libGLESv2.dll
+                    ....A    213660672     63150585  LyriX Church System.exe
+                    ....A       107520        49095  resources\elevate.exe
+                    ....A      5623296      1381310  vk_swiftshader.dll
+                    ....A       951296       265915  vulkan-1.dll
+------------------- ----- ------------ ------------  ------------------------
+                            1114632685    255340257  124 files, 15 folders
+
+  ??? spawning        command=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-bin\win\x64\app-builder.exe download-artifact --name nsis-resources-3.4.1-nsis-resources-3.4.1 --url https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-resources-3.4.1/nsis-resources-3.4.1.7z --sha512 Dqd6g+2buwwvoG1Vyf6BHR1b+25QMmPcwZx40atOT57gH27rkjOei1L0JTldxZu4NFoEmW4kJgZ3DlSWVON3+Q==
+  ??? computing effective URL  initialUrl=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-resources-3.4.1/nsis-resources-3.4.1.7z
+                             currentUrl=https://release-assets.githubusercontent.com/github-production-release-asset/65527128/64ac4a00-a87a-11e9-901b-f221c4fd0776?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-02-22T16%3A54%3A27Z&rscd=attachment%3B+filename%3Dnsis-resources-3.4.1.7z&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-02-22T15%3A54%3A01Z&ske=2026-02-22T16%3A54%3A27Z&sks=b&skv=2018-11-09&sig=zYPCKuZpRPA6cDRQBp6yapg5Qiq8byeR5RYFEUI%2FDZ0%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3MTc3NjEyMSwibmJmIjoxNzcxNzc1ODIxLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ._Rp-qBLgknob2QLXGvKu5t3f1LruGwQje4TUA7_moKU&response-content-disposition=attachment%3B%20filename%3Dnsis-resources-3.4.1.7z&response-content-type=application%2Foctet-stream
+  ??? downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-resources-3.4.1/nsis-resources-3.4.1.7z length=730800 contentType=application/octet-stream
+  ??? downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-resources-3.4.1/nsis-resources-3.4.1.7z size=731 kB parts=1
+  ??? map async       taskCount=1
+  ??? download part   range=bytes=0-730799 index=0
+  ??? downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-resources-3.4.1/nsis-resources-3.4.1.7z duration=654ms
+  ??? execute command  command='C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\7zip-bin\win\x64\7za.exe' x -snld -bd 'C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\803109459.7z' '-oC:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\803109459'
+                     workingDirectory=C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis
+  ??? command executed  executable=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\7zip-bin\win\x64\7za.exe
+                      out=
+    7-Zip (a) 21.07 (x64) : Copyright (c) 1999-2021 Igor Pavlov : 2021-12-26
+    
+    Scanning the drive for archives:
+    1 file, 730800 bytes (714 KiB)
+    
+    Extracting archive: C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\803109459.7z
+    --
+    Path = C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\803109459.7z
+    Type = 7z
+    Physical Size = 730800
+    Headers Size = 650
+    Method = LZMA2:3m LZMA:20 BCJ2
+    Solid = +
+    Blocks = 2
+    
+    Everything is Ok
+    
+    Folders: 5
+    Files: 22
+    Size:       2998788
+    Compressed: 730800
+    
+  ??? exited          command=app-builder.exe code=0 pid=7288 out=C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\nsis-resources-3.4.1-nsis-resources-3.4.1
+  ??? spawning        command=C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1\Bin\makensis.exe -WX -INPUTCHARSET UTF8 -DAPP_ID=com.lyrix.desktop -DAPP_GUID=7808d8da-f8c1-56a3-a4e7-0af6e9223556 -DUNINSTALL_APP_KEY=7808d8da-f8c1-56a3-a4e7-0af6e9223556 -DPRODUCT_NAME=LyriX Church System -DPRODUCT_FILENAME=LyriX Church System -DAPP_FILENAME=LyriX Church System -DAPP_DESCRIPTION= -DVERSION=1.0.0 -DPROJECT_DIR=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop -DBUILD_RESOURCES_DIR=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\build -DAPP_PACKAGE_NAME=desktop -DUNINSTALL_URL_HELP=https://github.com/vamsibo/LyriX-Church-System#readme -DUNINSTALL_URL_INFO_ABOUT=https://github.com/vamsibo/LyriX-Church-System#readme -DUNINSTALL_URL_UPDATE_INFO=https://github.com/vamsibo/LyriX-Church-System#readme -DUNINSTALL_URL_README=https://github.com/vamsibo/LyriX-Church-System#readme -DMUI_ICON=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico -DMUI_UNICON=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico -DAPP_64=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\desktop-1.0.0-x64.nsis.7z -DAPP_64_NAME=desktop-1.0.0-x64.nsis.7z -DAPP_64_HASH=E91A6BF7DECBDA59EB1DF08D58770B66FDC0F9398AB00EFC671DE989ECEEF753CE65262ED37222AF57C5BC928A845C1D6E67C2440CBF2DA6E8175E648309C684 -DAPP_64_UNPACKED_SIZE=1088509 -DAPP_INSTALLER_STORE_FILE=desktop-updater\installer.exe -DCOMPRESSION_METHOD=7z -DMULTIUSER_INSTALLMODE_ALLOW_ELEVATION -DINSTALL_MODE_PER_ALL_USERS_REQUIRED -DallowToChangeInstallationDirectory -DSHORTCUT_NAME=LyriX Church System -DUNINSTALL_DISPLAY_NAME=LyriX Church System 1.0.0 -DMUI_WELCOMEFINISHPAGE_BITMAP=${NSISDIR}\Contrib\Graphics\Wizard\nsis3-metro.bmp -DMUI_UNWELCOMEFINISHPAGE_BITMAP=${NSISDIR}\Contrib\Graphics\Wizard\nsis3-metro.bmp -DESTIMATED_SIZE=1088508 -DCOMPRESS=auto -DBUILD_UNINSTALLER -DUNINSTALLER_OUT_FILE=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.__uninstaller.exe -XOutFile "C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.exe" -XVIProductVersion 1.0.0.0 -XVIAddVersionKey /LANG=1033 ProductName "LyriX Church System" -XVIAddVersionKey /LANG=1033 ProductVersion "1.0.0" -XVIAddVersionKey /LANG=1033 LegalCopyright "Copyright ?? 2026 LyriX Church System" -XVIAddVersionKey /LANG=1033 FileDescription "" -XVIAddVersionKey /LANG=1033 FileVersion "1.0.0" -XUnicode true -XSetCompressor zlib - cwd=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-lib\templates\nsis
+Command line defined: "APP_ID=com.lyrix.desktop"
+Command line defined: "APP_GUID=7808d8da-f8c1-56a3-a4e7-0af6e9223556"
+Command line defined: "UNINSTALL_APP_KEY=7808d8da-f8c1-56a3-a4e7-0af6e9223556"
+Command line defined: "PRODUCT_NAME=LyriX Church System"
+Command line defined: "PRODUCT_FILENAME=LyriX Church System"
+Command line defined: "APP_FILENAME=LyriX Church System"
+Command line defined: "APP_DESCRIPTION="
+Command line defined: "VERSION=1.0.0"
+Command line defined: "PROJECT_DIR=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop"
+Command line defined: "BUILD_RESOURCES_DIR=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\build"
+Command line defined: "APP_PACKAGE_NAME=desktop"
+Command line defined: "UNINSTALL_URL_HELP=https://github.com/vamsibo/LyriX-Church-System#readme"
+Command line defined: "UNINSTALL_URL_INFO_ABOUT=https://github.com/vamsibo/LyriX-Church-System#readme"
+Command line defined: "UNINSTALL_URL_UPDATE_INFO=https://github.com/vamsibo/LyriX-Church-System#readme"
+Command line defined: "UNINSTALL_URL_README=https://github.com/vamsibo/LyriX-Church-System#readme"
+Command line defined: "MUI_ICON=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico"
+Command line defined: "MUI_UNICON=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico"
+Command line defined: "APP_64=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\desktop-1.0.0-x64.nsis.7z"
+Command line defined: "APP_64_NAME=desktop-1.0.0-x64.nsis.7z"
+Command line defined: "APP_64_HASH=E91A6BF7DECBDA59EB1DF08D58770B66FDC0F9398AB00EFC671DE989ECEEF753CE65262ED37222AF57C5BC928A845C1D6E67C2440CBF2DA6E8175E648309C684"
+Command line defined: "APP_64_UNPACKED_SIZE=1088509"
+Command line defined: "APP_INSTALLER_STORE_FILE=desktop-updater\installer.exe"
+Command line defined: "COMPRESSION_METHOD=7z"
+Command line defined: "MULTIUSER_INSTALLMODE_ALLOW_ELEVATION"
+Command line defined: "INSTALL_MODE_PER_ALL_USERS_REQUIRED"
+Command line defined: "allowToChangeInstallationDirectory"
+Command line defined: "SHORTCUT_NAME=LyriX Church System"
+Command line defined: "UNINSTALL_DISPLAY_NAME=LyriX Church System 1.0.0"
+Command line defined: "MUI_WELCOMEFINISHPAGE_BITMAP=${NSISDIR}\Contrib\Graphics\Wizard\nsis3-metro.bmp"
+Command line defined: "MUI_UNWELCOMEFINISHPAGE_BITMAP=${NSISDIR}\Contrib\Graphics\Wizard\nsis3-metro.bmp"
+Command line defined: "ESTIMATED_SIZE=1088508"
+Command line defined: "COMPRESS=auto"
+Command line defined: "BUILD_UNINSTALLER"
+Command line defined: "UNINSTALLER_OUT_FILE=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.__uninstaller.exe"
+Processing config: C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1\nsisconf.nsh
+Processing script file: "<stdin>" (UTF8)
+
+Processed 1 file, 9 command line commands, writing output (x86-unicode):
+
+Output: "C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.exe"
+Install: 0 pages (0 bytes), 1 section (16408 bytes), 31 instructions (868 bytes), 2933 strings (24282 bytes), 26 language tables (4316 bytes).
+Uninstall: 4 pages (320 bytes), 1 section (16408 bytes), 2131 instructions (59668 bytes), 8581 strings (111270 bytes), 26 language tables (8788 bytes).
+
+Using zlib compression.
+
+EXE header size:              119808 / 39424 bytes
+Install code:                   9868 / 46274 bytes
+Install data:                      0 / 8 bytes
+Uninstall code+data:          188542 / 189760 bytes
+CRC (0x048CAEC4):                  4 / 4 bytes
+
+Total size:                   318222 / 275470 bytes (115.5%)
+  ??? exited          command=makensis.exe code=0 pid=10952
+  ??? executing       file=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.exe args= env={
+  "__COMPAT_LAYER": "RunAsInvoker"
+}
+  ??? executed        file=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.exe
+  ??? signing with signtool.exe  path=release_v2\LyriX Church System Setup 1.0.0.__uninstaller.exe
+  ??? no signing info identified, signing is skipped  signHook=false cscInfo=null
+  ??? spawning        command=C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1\Bin\makensis.exe -WX -INPUTCHARSET UTF8 -DAPP_ID=com.lyrix.desktop -DAPP_GUID=7808d8da-f8c1-56a3-a4e7-0af6e9223556 -DUNINSTALL_APP_KEY=7808d8da-f8c1-56a3-a4e7-0af6e9223556 -DPRODUCT_NAME=LyriX Church System -DPRODUCT_FILENAME=LyriX Church System -DAPP_FILENAME=LyriX Church System -DAPP_DESCRIPTION= -DVERSION=1.0.0 -DPROJECT_DIR=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop -DBUILD_RESOURCES_DIR=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\build -DAPP_PACKAGE_NAME=desktop -DUNINSTALL_URL_HELP=https://github.com/vamsibo/LyriX-Church-System#readme -DUNINSTALL_URL_INFO_ABOUT=https://github.com/vamsibo/LyriX-Church-System#readme -DUNINSTALL_URL_UPDATE_INFO=https://github.com/vamsibo/LyriX-Church-System#readme -DUNINSTALL_URL_README=https://github.com/vamsibo/LyriX-Church-System#readme -DMUI_ICON=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico -DMUI_UNICON=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico -DAPP_64=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\desktop-1.0.0-x64.nsis.7z -DAPP_64_NAME=desktop-1.0.0-x64.nsis.7z -DAPP_64_HASH=E91A6BF7DECBDA59EB1DF08D58770B66FDC0F9398AB00EFC671DE989ECEEF753CE65262ED37222AF57C5BC928A845C1D6E67C2440CBF2DA6E8175E648309C684 -DAPP_64_UNPACKED_SIZE=1088509 -DAPP_INSTALLER_STORE_FILE=desktop-updater\installer.exe -DCOMPRESSION_METHOD=7z -DMULTIUSER_INSTALLMODE_ALLOW_ELEVATION -DINSTALL_MODE_PER_ALL_USERS_REQUIRED -DallowToChangeInstallationDirectory -DSHORTCUT_NAME=LyriX Church System -DUNINSTALL_DISPLAY_NAME=LyriX Church System 1.0.0 -DMUI_WELCOMEFINISHPAGE_BITMAP=${NSISDIR}\Contrib\Graphics\Wizard\nsis3-metro.bmp -DMUI_UNWELCOMEFINISHPAGE_BITMAP=${NSISDIR}\Contrib\Graphics\Wizard\nsis3-metro.bmp -DESTIMATED_SIZE=1088508 -DCOMPRESS=auto -DUNINSTALLER_OUT_FILE=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.__uninstaller.exe -XOutFile "C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.exe" -XVIProductVersion 1.0.0.0 -XVIAddVersionKey /LANG=1033 ProductName "LyriX Church System" -XVIAddVersionKey /LANG=1033 ProductVersion "1.0.0" -XVIAddVersionKey /LANG=1033 LegalCopyright "Copyright ?? 2026 LyriX Church System" -XVIAddVersionKey /LANG=1033 FileDescription "" -XVIAddVersionKey /LANG=1033 FileVersion "1.0.0" -XUnicode true -XSetCompressor zlib - cwd=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-lib\templates\nsis
+Command line defined: "APP_ID=com.lyrix.desktop"
+Command line defined: "APP_GUID=7808d8da-f8c1-56a3-a4e7-0af6e9223556"
+Command line defined: "UNINSTALL_APP_KEY=7808d8da-f8c1-56a3-a4e7-0af6e9223556"
+Command line defined: "PRODUCT_NAME=LyriX Church System"
+Command line defined: "PRODUCT_FILENAME=LyriX Church System"
+Command line defined: "APP_FILENAME=LyriX Church System"
+Command line defined: "APP_DESCRIPTION="
+Command line defined: "VERSION=1.0.0"
+Command line defined: "PROJECT_DIR=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop"
+Command line defined: "BUILD_RESOURCES_DIR=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\build"
+Command line defined: "APP_PACKAGE_NAME=desktop"
+Command line defined: "UNINSTALL_URL_HELP=https://github.com/vamsibo/LyriX-Church-System#readme"
+Command line defined: "UNINSTALL_URL_INFO_ABOUT=https://github.com/vamsibo/LyriX-Church-System#readme"
+Command line defined: "UNINSTALL_URL_UPDATE_INFO=https://github.com/vamsibo/LyriX-Church-System#readme"
+Command line defined: "UNINSTALL_URL_README=https://github.com/vamsibo/LyriX-Church-System#readme"
+Command line defined: "MUI_ICON=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico"
+Command line defined: "MUI_UNICON=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\public\icon.ico"
+Command line defined: "APP_64=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\desktop-1.0.0-x64.nsis.7z"
+Command line defined: "APP_64_NAME=desktop-1.0.0-x64.nsis.7z"
+Command line defined: "APP_64_HASH=E91A6BF7DECBDA59EB1DF08D58770B66FDC0F9398AB00EFC671DE989ECEEF753CE65262ED37222AF57C5BC928A845C1D6E67C2440CBF2DA6E8175E648309C684"
+Command line defined: "APP_64_UNPACKED_SIZE=1088509"
+Command line defined: "APP_INSTALLER_STORE_FILE=desktop-updater\installer.exe"
+Command line defined: "COMPRESSION_METHOD=7z"
+Command line defined: "MULTIUSER_INSTALLMODE_ALLOW_ELEVATION"
+Command line defined: "INSTALL_MODE_PER_ALL_USERS_REQUIRED"
+Command line defined: "allowToChangeInstallationDirectory"
+Command line defined: "SHORTCUT_NAME=LyriX Church System"
+Command line defined: "UNINSTALL_DISPLAY_NAME=LyriX Church System 1.0.0"
+Command line defined: "MUI_WELCOMEFINISHPAGE_BITMAP=${NSISDIR}\Contrib\Graphics\Wizard\nsis3-metro.bmp"
+Command line defined: "MUI_UNWELCOMEFINISHPAGE_BITMAP=${NSISDIR}\Contrib\Graphics\Wizard\nsis3-metro.bmp"
+Command line defined: "ESTIMATED_SIZE=1088508"
+Command line defined: "COMPRESS=auto"
+Command line defined: "UNINSTALLER_OUT_FILE=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.__uninstaller.exe"
+Processing config: C:\Users\BODDU_VAMSI\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1\nsisconf.nsh
+Processing script file: "<stdin>" (UTF8)
+
+Processed 1 file, 9 command line commands, writing output (x86-unicode):
+
+Output: "C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.exe"
+Install: 4 pages (256 bytes), 1 section (16408 bytes), 2306 instructions (64568 bytes), 10305 strings (124590 bytes), 26 language tables (9412 bytes).
+
+Using zlib compression.
+
+EXE header size:              121856 / 39424 bytes
+Install code:                  48168 / 215698 bytes
+Install data:              255869584 / 256313635 bytes
+CRC (0xCF9958A2):                  4 / 4 bytes
+
+Total size:                256039612 / 256568761 bytes (99.7%)
+  ??? exited          command=makensis.exe code=0 pid=25056
+  ??? signing with signtool.exe  path=release_v2\LyriX Church System Setup 1.0.0.exe
+  ??? no signing info identified, signing is skipped  signHook=false cscInfo=null
+  ??? building block map  blockMapFile=release_v2\LyriX Church System Setup 1.0.0.exe.blockmap
+  ??? spawning        command=C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\node_modules\app-builder-bin\win\x64\app-builder.exe blockmap --input C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.exe --output C:\Users\BODDU_VAMSI\.gemini\antigravity\scratch\ChurchLyricsSystem\desktop\release_v2\LyriX Church System Setup 1.0.0.exe.blockmap
+  ??? exited          command=app-builder.exe code=0 pid=19972 out={"size":256039612,"sha512":"T4ZdS9JuFk+zNmwlJEHko4UF86mFZhsoT8gWKJy+a5kwN/MMQL4RVpNv8v5cB8AMQaAZbGCk+r2PWZ6Hlsey3A=="}
+  ??? no event listeners found  event=artifactBuildCompleted
+  ??? no event listeners found  event=artifactBuildCompleted
