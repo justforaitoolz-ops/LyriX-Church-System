@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
   "main": "src/main.js",
   "scripts": {
@@ -48,6 +48,14 @@
   "build": {
     "appId": "com.lyrix.desktop",
     "productName": "LyriX Church System",
+    "files": [
+      "src/**/*",
+      "renderer_dist/**/*",
+      "package.json",
+      "public/icon.ico",
+      "public/icon.png",
+      "public/projector.html"
+    ],
     "directories": {
       "output": "release_v2"
     },

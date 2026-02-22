@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog, screen, globalShortcut, nativeTheme } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const { autoUpdater } = require('electron-updater');
 const { startServer } = require('./server/index.js');
 const { initDb, searchSongs, addSong, getNextId } = require('./database/db.js');
@@ -81,6 +82,37 @@ app.whenReady().then(() => {
     // Updater Configuration
     autoUpdater.autoDownload = false; // We want manual control
 
+    if (process.env.NODE_ENV !== 'development') {
+        try {
+            // Check if app-update.yml exists in resources
+            const resourcesPath = path.join(process.resourcesPath);
+            const updateConfigPath = path.join(resourcesPath, 'app-update.yml');
+
+            if (!fs.existsSync(updateConfigPath)) {
+                console.log("app-update.yml missing in resources. Creating fallback in userData...");
+                const fallbackConfigPath = path.join(app.getPath('userData'), 'app-update.yml');
+                const configContent = `owner: justforaitoolz-ops\nrepo: LyriX-Church-System\nprovider: github`;
+                fs.writeFileSync(fallbackConfigPath, configContent);
+                autoUpdater.updateConfigPath = fallbackConfigPath;
+                console.log(`Updater config path set to: ${fallbackConfigPath}`);
+            }
+        } catch (e) {
+            console.error("Failed to setup update fallback config:", e);
+        }
+    }
+
+    // Bypass missing app-update.yml by setting feed manually
+    try {
+        autoUpdater.setFeedURL({
+            provider: 'github',
+            owner: 'justforaitoolz-ops',
+            repo: 'LyriX-Church-System'
+        });
+        console.log("Updater feed configured manually.");
+    } catch (e) {
+        console.error("Failed to set manual feed URL:", e);
+    }
+
     autoUpdater.on('checking-for-update', () => {
         BrowserWindow.getAllWindows().forEach(win => win.webContents.send('update-status', 'checking'));
     });
@@ -121,6 +153,10 @@ app.whenReady().then(() => {
 
     ipcMain.handle('install-update', () => {
         autoUpdater.quitAndInstall();
+    });
+
+    ipcMain.handle('get-app-version', () => {
+        return app.getVersion();
     });
 
     // IPC Handlers for Renderer

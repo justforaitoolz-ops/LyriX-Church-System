@@ -30,6 +30,7 @@ function App() {
     const [updateProgress, setUpdateProgress] = useState(0);
     const [updateInfo, setUpdateInfo] = useState(null);
     const [updateError, setUpdateError] = useState('');
+    const [appVersion, setAppVersion] = useState('1.0.0');
 
     const confirmOverwrite = (title) => {
         return new Promise((resolve) => {
@@ -56,6 +57,7 @@ function App() {
     const [churchPlace, setChurchPlace] = useState(() => localStorage.getItem('setting_churchPlace') || '');
     const [isEditingProfile, setIsEditingProfile] = useState(() => !localStorage.getItem('setting_churchName'));
     const [welcomeStep, setWelcomeStep] = useState(() => !localStorage.getItem('setting_churchName') ? 1 : 0);
+    const [showAppControls, setShowAppControls] = useState(() => localStorage.getItem('setting_showAppControls') !== 'false');
 
     // Library Categories
     const allCategories = ['English Choruses', 'English Hymns', 'Telugu Songs', 'Hindi Songs', 'Special Songs', 'Children Songs'];
@@ -89,7 +91,8 @@ function App() {
         localStorage.setItem('setting_churchName', churchName);
         localStorage.setItem('setting_churchPlace', churchPlace);
         localStorage.setItem('setting_visibleCategories', JSON.stringify(visibleCategories));
-    }, [favourites, fontSize, isBold, color, backgroundColor, backgroundImage, textAlign, fontFamily, defaultCategory, autoFormat, previewMode, maxRemoteDevices, churchName, churchPlace, visibleCategories]);
+        localStorage.setItem('setting_showAppControls', showAppControls);
+    }, [favourites, fontSize, isBold, color, backgroundColor, backgroundImage, textAlign, fontFamily, defaultCategory, autoFormat, previewMode, maxRemoteDevices, churchName, churchPlace, visibleCategories, showAppControls]);
 
     useEffect(() => {
         if (window.electron) {
@@ -106,6 +109,11 @@ function App() {
                     setIp(data.ip);
                     if (data.connections !== undefined) setConnections(data.connections);
                 }
+            });
+
+            // Fetch app version
+            window.electron.invoke('get-app-version').then(v => {
+                if (v) setAppVersion(v);
             });
 
             const unsubProjectorState = window.electron.onProjectorStateChanged((event, isOpen) => {
@@ -498,7 +506,7 @@ function App() {
                         >
                             {isProjectorOpen ? "Close Projector Window" : "Open Projector Window"}
                         </button>
-                        <div className="text-[10px] text-slate-400 font-medium pt-1 italic">version 1.0 &copy; ChurchLyriXApp</div>
+                        <div className="text-[10px] text-slate-400 font-medium pt-1 italic">version {appVersion} &copy; ChurchLyriXApp</div>
                     </div>
                 </div>
 
@@ -796,6 +804,17 @@ function App() {
                                         </div>
                                         <label className="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" checked={autoFormat} onChange={(e) => setAutoFormat(e.target.checked)} className="sr-only peer" />
+                                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
+
+                                    <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+                                        <div>
+                                            <label className="font-semibold text-slate-700 text-xs uppercase block mb-1">Show Application Controls</label>
+                                            <p className="text-xs text-slate-400 italic">Show or hide the system refresh, zoom, and developer tools.</p>
+                                        </div>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked={showAppControls} onChange={(e) => setShowAppControls(e.target.checked)} className="sr-only peer" />
                                             <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                                         </label>
                                     </div>
@@ -836,7 +855,7 @@ function App() {
                                 </h3>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-sm font-bold text-slate-700">LyriX Desktop v1.0.0</div>
+                                        <div className="text-sm font-bold text-slate-700">LyriX Desktop v{appVersion}</div>
                                         <div className="text-xs text-slate-500 italic mt-1">
                                             {updateStatus === 'idle' && 'Your app is up to date.'}
                                             {updateStatus === 'checking' && 'Checking for updates...'}
@@ -913,40 +932,42 @@ function App() {
                             </div>
 
                             {/* Application Controls Group */}
-                            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
-                                <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
-                                    <span className="p-1.5 bg-green-100 text-green-600 rounded-lg">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-                                    </span>
-                                    Application Controls
-                                </h3>
-                                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                                    <button onClick={() => window.electron?.appControl('reload')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
-                                        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                                        Reload App
-                                    </button>
-                                    <button onClick={() => window.electron?.appControl('fullscreen')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
-                                        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
-                                        Toggle Fullscreen
-                                    </button>
-                                    <button onClick={() => window.electron?.appControl('devtools')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
-                                        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-                                        Developer Tools
-                                    </button>
-                                    <button onClick={() => window.electron?.appControl('zoom-in')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
-                                        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
-                                        Zoom In
-                                    </button>
-                                    <button onClick={() => window.electron?.appControl('zoom-out')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
-                                        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" /></svg>
-                                        Zoom Out
-                                    </button>
-                                    <button onClick={() => window.electron?.appControl('zoom-reset')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
-                                        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                                        Reset Zoom
-                                    </button>
+                            {showAppControls && (
+                                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+                                    <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                        <span className="p-1.5 bg-green-100 text-green-600 rounded-lg">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                                        </span>
+                                        Application Controls
+                                    </h3>
+                                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                                        <button onClick={() => window.electron?.appControl('reload')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                                            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                            Reload App
+                                        </button>
+                                        <button onClick={() => window.electron?.appControl('fullscreen')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                                            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                                            Toggle Fullscreen
+                                        </button>
+                                        <button onClick={() => window.electron?.appControl('devtools')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                                            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                                            Developer Tools
+                                        </button>
+                                        <button onClick={() => window.electron?.appControl('zoom-in')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                                            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+                                            Zoom In
+                                        </button>
+                                        <button onClick={() => window.electron?.appControl('zoom-out')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                                            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" /></svg>
+                                            Zoom Out
+                                        </button>
+                                        <button onClick={() => window.electron?.appControl('zoom-reset')} className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                                            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                            Reset Zoom
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                         </div>
                     </div>
