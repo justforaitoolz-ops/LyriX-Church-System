@@ -14,23 +14,16 @@ let songsCache = [];
 let scheduleCache = [];
 
 async function initDb() {
-    console.log("Initializing Firestore DB connection & Auth...");
+    console.log("Initializing local DB cache...");
 
-    // Authenticate app
-    try {
-        await signInAnonymously(auth);
-        console.log("Authenticated anonymously with Firebase");
-    } catch (err) {
-        console.error("Firebase Authentication failed:", err);
-    }
-
-    // OFFLINE FALLBACK: Load local backup first so app works without internet
+    // OFFLINE FIRST: Load local backup immediately before any network/async calls
     try {
         if (fs.existsSync(SONGS_BACKUP_PATH)) {
             const localSongs = JSON.parse(fs.readFileSync(SONGS_BACKUP_PATH, 'utf-8'));
             if (Array.isArray(localSongs) && localSongs.length > 0) {
                 songsCache = localSongs;
-                console.log(`Loaded ${songsCache.length} songs from local backup (Offline Mode Ready)`);
+                console.log(`Loaded ${songsCache.length} songs from local backup (Instant Initial Load)`);
+                if (global.broadcastSongsUpdate) global.broadcastSongsUpdate(songsCache);
             }
         }
         if (fs.existsSync(SCHEDULE_BACKUP_PATH)) {
@@ -38,10 +31,20 @@ async function initDb() {
             if (Array.isArray(localSchedule)) {
                 scheduleCache = localSchedule;
                 console.log(`Loaded schedule from local backup`);
+                if (global.broadcastScheduleUpdate) global.broadcastScheduleUpdate(scheduleCache);
             }
         }
     } catch (err) {
         console.error("Failed to load local backup:", err);
+    }
+
+    console.log("Connecting to Firestore & Auth...");
+    // Authenticate app
+    try {
+        await signInAnonymously(auth);
+        console.log("Authenticated anonymously with Firebase");
+    } catch (err) {
+        console.error("Firebase Authentication failed:", err);
     }
 
     // Subscribe to Songs
@@ -60,6 +63,10 @@ async function initDb() {
             fs.writeFileSync(SONGS_BACKUP_PATH, JSON.stringify(songsCache, null, 2));
         } catch (err) {
             console.error("Failed to save local songs backup:", err);
+        }
+
+        if (global.broadcastSongsUpdate) {
+            global.broadcastSongsUpdate(songsCache);
         }
 
     }, (error) => {

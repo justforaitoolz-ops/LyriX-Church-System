@@ -24,13 +24,20 @@ function App() {
     const [customAlert, setCustomAlert] = useState(null);
     const [songToDelete, setSongToDelete] = useState(null);
     const [overwritePrompt, setOverwritePrompt] = useState(null);
+    const searchQueryRef = useRef('');
+    const activeFilterRef = useRef('All');
+
+    useEffect(() => {
+        searchQueryRef.current = searchQuery;
+        activeFilterRef.current = activeFilter;
+    }, [searchQuery, activeFilter]);
 
     // Update State
     const [updateStatus, setUpdateStatus] = useState('idle'); // idle, checking, available, not-available, downloading, downloaded, error
     const [updateProgress, setUpdateProgress] = useState(0);
     const [updateInfo, setUpdateInfo] = useState(null);
     const [updateError, setUpdateError] = useState('');
-    const [appVersion, setAppVersion] = useState('1.0.0');
+    const [appVersion, setAppVersion] = useState('1.0.8');
 
     const confirmOverwrite = (title) => {
         return new Promise((resolve) => {
@@ -58,6 +65,7 @@ function App() {
     const [isEditingProfile, setIsEditingProfile] = useState(() => !localStorage.getItem('setting_churchName'));
     const [welcomeStep, setWelcomeStep] = useState(() => !localStorage.getItem('setting_churchName') ? 1 : 0);
     const [showAppControls, setShowAppControls] = useState(() => localStorage.getItem('setting_showAppControls') !== 'false');
+    const [showDatabaseManagement, setShowDatabaseManagement] = useState(() => localStorage.getItem('setting_showDatabaseManagement') !== 'false');
 
     // Library Categories
     const allCategories = ['English Choruses', 'English Hymns', 'Telugu Songs', 'Hindi Songs', 'Special Songs', 'Children Songs'];
@@ -92,7 +100,8 @@ function App() {
         localStorage.setItem('setting_churchPlace', churchPlace);
         localStorage.setItem('setting_visibleCategories', JSON.stringify(visibleCategories));
         localStorage.setItem('setting_showAppControls', showAppControls);
-    }, [favourites, fontSize, isBold, color, backgroundColor, backgroundImage, textAlign, fontFamily, defaultCategory, autoFormat, previewMode, maxRemoteDevices, churchName, churchPlace, visibleCategories, showAppControls]);
+        localStorage.setItem('setting_showDatabaseManagement', showDatabaseManagement);
+    }, [favourites, fontSize, isBold, color, backgroundColor, backgroundImage, textAlign, fontFamily, defaultCategory, autoFormat, previewMode, maxRemoteDevices, churchName, churchPlace, visibleCategories, showAppControls, showDatabaseManagement]);
 
     useEffect(() => {
         if (window.electron) {
@@ -182,6 +191,10 @@ function App() {
                 setUpdateProgress(percent);
             });
 
+            const unsubSongsUpdate = window.electron.onSongsUpdate(() => {
+                handleSearch(searchQueryRef.current, activeFilterRef.current);
+            });
+
             handleSearch('', 'All');
             fetchSchedule();
 
@@ -228,6 +241,7 @@ function App() {
                 if (unsubSchedule) unsubSchedule();
                 if (unsubUpdateStatus) unsubUpdateStatus();
                 if (unsubUpdateProgress) unsubUpdateProgress();
+                if (unsubSongsUpdate) unsubSongsUpdate();
             };
         }
     }, []);
@@ -819,6 +833,17 @@ function App() {
                                         </label>
                                     </div>
 
+                                    <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+                                        <div>
+                                            <label className="font-semibold text-slate-700 text-xs uppercase block mb-1">Show Database Management</label>
+                                            <p className="text-xs text-slate-400 italic">Show or hide the XML import and database tools.</p>
+                                        </div>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked={showDatabaseManagement} onChange={(e) => setShowDatabaseManagement(e.target.checked)} className="sr-only peer" />
+                                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
+
                                     <div className="pt-4 border-t border-slate-50">
                                         <label className="font-semibold text-slate-700 text-xs uppercase block mb-3">Visible Library Categories</label>
                                         <p className="text-xs text-slate-400 italic mb-4">Select which categories appear as tabs in the Song Library.</p>
@@ -903,33 +928,35 @@ function App() {
                             </div>
 
                             {/* Database Management Group */}
-                            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
-                                <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
-                                    <span className="p-1.5 bg-indigo-100 text-indigo-600 rounded-lg">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
-                                    </span>
-                                    Database Management
-                                </h3>
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between border-t border-slate-50 pt-4">
-                                        <div>
-                                            <label className="font-semibold text-slate-700 text-sm block mb-1">Import OpenLyrics Database (.xml)</label>
-                                            <p className="text-xs text-slate-400 italic">Import songs from an OpenLP or OpenLyrics exported database. Duplicates will be skipped or overwritten.</p>
+                            {showDatabaseManagement && (
+                                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+                                    <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                        <span className="p-1.5 bg-indigo-100 text-indigo-600 rounded-lg">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
+                                        </span>
+                                        Database Management
+                                    </h3>
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between border-t border-slate-50 pt-4">
+                                            <div>
+                                                <label className="font-semibold text-slate-700 text-sm block mb-1">Import OpenLyrics Database (.xml)</label>
+                                                <p className="text-xs text-slate-400 italic">Import songs from an OpenLP or OpenLyrics exported database. Duplicates will be skipped or overwritten.</p>
+                                            </div>
+                                            <label className="shrink-0 px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-lg text-sm font-bold transition-colors cursor-pointer flex items-center gap-2 shadow-sm">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                                                Import XML
+                                                <input
+                                                    type="file"
+                                                    accept=".xml"
+                                                    multiple
+                                                    className="hidden"
+                                                    onChange={handleXMLImport}
+                                                />
+                                            </label>
                                         </div>
-                                        <label className="shrink-0 px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-lg text-sm font-bold transition-colors cursor-pointer flex items-center gap-2 shadow-sm">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-                                            Import XML
-                                            <input
-                                                type="file"
-                                                accept=".xml"
-                                                multiple
-                                                className="hidden"
-                                                onChange={handleXMLImport}
-                                            />
-                                        </label>
                                     </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Application Controls Group */}
                             {showAppControls && (

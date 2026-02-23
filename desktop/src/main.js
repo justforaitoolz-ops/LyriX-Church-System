@@ -70,6 +70,11 @@ global.broadcastScheduleUpdate = (schedule) => {
     wins.forEach(w => w.webContents.send('schedule-updated', schedule));
 };
 
+global.broadcastSongsUpdate = (songs) => {
+    const wins = BrowserWindow.getAllWindows();
+    wins.forEach(w => w.webContents.send('songs-updated', songs));
+};
+
 app.whenReady().then(() => {
     if (process.platform === 'win32') {
         app.setAppUserModelId('com.lyrix.desktop');
@@ -152,7 +157,7 @@ app.whenReady().then(() => {
     });
 
     ipcMain.handle('install-update', () => {
-        autoUpdater.quitAndInstall();
+        autoUpdater.quitAndInstall(true, true);
     });
 
     ipcMain.handle('get-app-version', () => {

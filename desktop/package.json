@@ -1,7 +1,7 @@
 {
   "name": "desktop",
-  "version": "1.0.3",
-  "description": "",
+  "version": "1.0.8",
+  "description": "Church LyriX Desktop Application for lyrics and presentation management",
   "main": "src/main.js",
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on tcp:5173 && cross-env NODE_ENV=development electron .\"",
@@ -21,6 +21,7 @@
     "better-sqlite3": "^12.6.2",
     "cheerio": "^1.2.0",
     "clsx": "^2.1.1",
+    "dotenv": "^17.3.1",
     "electron-updater": "^6.8.3",
     "express": "^5.2.1",
     "firebase": "^12.8.0",
@@ -67,7 +68,8 @@
       {
         "provider": "github",
         "owner": "justforaitoolz-ops",
-        "repo": "LyriX-Church-System"
+        "repo": "LyriX-Church-System",
+        "releaseType": "release"
       }
     ],
     "nsis": {

@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView, FlatList, KeyboardAvoidingView, Platform, Image, Keyboard } from 'react-native';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Alert, SafeAreaView, FlatList, KeyboardAvoidingView, Platform, Image, Keyboard, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { db } from './firebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { db, auth } from './firebaseConfig';
 import { collection, query, where, getDocs, doc, setDoc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore';
+import { signInAnonymously } from 'firebase/auth';
 
 import io from 'socket.io-client';
 
@@ -10,6 +12,17 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('schedule');
   const [allSongs, setAllSongs] = useState([]);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [isAppLoading, setIsAppLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [tempName, setTempName] = useState('');
+  const [currentGreeting, setCurrentGreeting] = useState('Praise the Lord!');
+
+  // Animation values
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const greetingFadeAnim = useRef(new Animated.Value(0)).current;
 
   // Add Song State
   const [newTitle, setNewTitle] = useState('');
@@ -22,20 +35,105 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  // Firestore Sync
+  // Christian Greetings List
+  const greetings = [
+    "Praise the Lord",
+    "Shalom",
+    "Grace and Peace",
+    "God Bless You",
+    "Blessings",
+    "Joy in the Lord"
+  ];
+
+  // Startup Logic: Splash & Loading Name
   useEffect(() => {
-    // Subscribe to Sunday Service Schedule
-    const scheduleRef = doc(db, "schedules", "sunday-service");
-    const unsubscribe = onSnapshot(scheduleRef, (docSnap) => {
-      if (docSnap.exists()) {
-        setSchedule(docSnap.data().items || []);
+    const initApp = async () => {
+      try {
+        // Authenticate anonymously for Firestore access
+        await signInAnonymously(auth);
+        console.log("Authenticated anonymously");
+        setIsAuthenticated(true);
+
+        const savedName = await AsyncStorage.getItem('user_name');
+        if (savedName) {
+          setUserName(savedName);
+          const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+          setCurrentGreeting(randomGreeting);
+        } else {
+          setShowOnboarding(true);
+        }
+
+        // 1. Splash Animation Sequence
+        // Phase 1: Fade In & Scale Up
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+          Animated.spring(scaleAnim, {
+            toValue: 1,
+            friction: 4,
+            useNativeDriver: true,
+          })
+        ]).start(() => {
+          // Phase 2: Wait for 3.0 seconds (Updated per request)
+          setTimeout(() => {
+            // Phase 3: Fade Out nicely
+            Animated.timing(fadeAnim, {
+              toValue: 0,
+              duration: 1000,
+              useNativeDriver: true,
+            }).start(() => {
+              setIsAppLoading(false);
+              // Float in the greeting
+              Animated.timing(greetingFadeAnim, {
+                toValue: 1,
+                duration: 1000,
+                delay: 200,
+                useNativeDriver: true,
+              }).start();
+            });
+          }, 3000);
+        });
+
+      } catch (e) {
+        console.error("Initialization error:", e);
+        setIsAppLoading(false);
       }
-    });
-    return () => unsubscribe();
+    };
+
+    initApp();
   }, []);
+
+  const handleOnboardingSubmit = async () => {
+    if (!tempName.trim()) {
+      Alert.alert("Welcome", "Please enter your name to continue");
+      return;
+    }
+    try {
+      await AsyncStorage.setItem('user_name', tempName.trim());
+      setUserName(tempName.trim());
+      setShowOnboarding(false);
+      const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+      setCurrentGreeting(randomGreeting);
+
+      // Start the greeting float-in animation
+      Animated.timing(greetingFadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        delay: 200,
+        useNativeDriver: true,
+      }).start();
+    } catch (e) {
+      Alert.alert("Error", "Could not save your name");
+    }
+  };
 
   // Firestore Sync
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     // Subscribe to Sunday Service Schedule
     const scheduleRef = doc(db, "schedules", "sunday-service");
     const unsubscribe = onSnapshot(scheduleRef, (docSnap) => {
@@ -44,13 +142,15 @@ export default function App() {
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [isAuthenticated]);
 
   // Tab Handlers
   // Fetch is auto via listener
 
   // Fetch All Songs for Client-Side Search
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     const fetchSongs = async () => {
       try {
         const q = query(collection(db, "songs"));
@@ -58,7 +158,24 @@ export default function App() {
         const songs = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          songs.push({ ...data, preview: data.slides ? data.slides[0] : '' });
+          let rawPreview = data.slides ? data.slides[0].split('\n')[0] : '';
+
+          // Clean preview: Remove leading numbers/dots and Title redundancy
+          let cleanedPreview = rawPreview
+            .replace(/^\d+[\.\s]*/, '') // Remove leading numbers like "1. " or "1 "
+            .trim();
+
+          // Remove title if it's identical to the start of lyrics
+          if (data.title && cleanedPreview.toLowerCase().startsWith(data.title.toLowerCase())) {
+            cleanedPreview = cleanedPreview.substring(data.title.length).replace(/^[\s,.-]+/, '').trim();
+          }
+
+          // Truncate if still too long (especially for Telugu/complex scripts)
+          if (cleanedPreview.length > 80) {
+            cleanedPreview = cleanedPreview.substring(0, 77) + '...';
+          }
+
+          songs.push({ ...data, displayPreview: cleanedPreview });
         });
         setAllSongs(songs);
         console.log(`Loaded ${songs.length} songs for offline search`);
@@ -67,7 +184,7 @@ export default function App() {
       }
     };
     fetchSongs();
-  }, []);
+  }, [isAuthenticated]);
 
   const handleSearch = () => {
     if (!searchQuery.trim()) {
@@ -77,12 +194,13 @@ export default function App() {
 
     const q = searchQuery.toLowerCase().trim();
     const isNumeric = /^\d+$/.test(q);
+    Keyboard.dismiss();
 
     const results = allSongs.filter(song => {
       const textToSearch = [
         song.title || '',
         song.id ? song.id.toString() : '',
-        song.preview || ''
+        song.displayPreview || ''
       ].join(' ').toLowerCase();
 
       return textToSearch.includes(q);
@@ -295,14 +413,21 @@ export default function App() {
   ), [activeTab]);
 
   const renderLogo = () => (
-    <View style={{ alignItems: 'center', marginBottom: 20, paddingTop: 10 }}>
-      <Image source={require('./assets/logo.png')} style={{ width: 100, height: 100, resizeMode: 'contain' }} />
+    <View style={styles.logoContainer}>
+      <Image
+        source={require('./assets/branding_logo.png')}
+        style={styles.logo}
+      />
     </View>
   );
 
   const renderSchedule = () => (
     <View style={styles.content}>
       {renderLogo()}
+      <Animated.View style={[styles.welcomeBanner, { opacity: greetingFadeAnim, transform: [{ translateY: greetingFadeAnim.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) }] }]}>
+        <Text style={styles.greetingText}>{currentGreeting}</Text>
+        <Text style={styles.userNameText}>{userName}</Text>
+      </Animated.View>
       <Text style={styles.heading}>Sunday Schedule ({schedule.length})</Text>
       <FlatList
         data={schedule}
@@ -350,8 +475,9 @@ export default function App() {
         renderItem={({ item }) => (
           <View style={styles.listItem}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.itemTitle}>{item.preview?.split('\n')[0]}</Text>
-              <Text style={styles.itemSubtitle}>{item.category} • {item.id}</Text>
+              <Text style={styles.itemTitle} numberOfLines={1}>{item.title}</Text>
+              {item.displayPreview ? <Text style={styles.itemSubtitle} numberOfLines={1}>{item.displayPreview}</Text> : null}
+              <Text style={styles.debugTextSub}>{item.category} • {item.id}</Text>
             </View>
             <TouchableOpacity style={styles.addButton} onPress={() => addToSchedule(item.id)}>
               <Text style={styles.addButtonText}>Add +</Text>
@@ -368,12 +494,41 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-        {activeTab === 'schedule' && renderSchedule()}
-        {activeTab === 'add' && renderAddSong()}
-        {activeTab === 'search' && renderSearch()}
-      </KeyboardAvoidingView>
-      {BottomTabs}
+      {isAppLoading ? (
+        <View style={styles.splashContainer}>
+          <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }], alignItems: 'center' }}>
+            <Image source={require('./assets/branding_logo.png')} style={styles.splashLogo} />
+            <Text style={styles.splashBranding}>LYRIX</Text>
+            <Text style={styles.splashSlogan}>Worship in Harmony</Text>
+          </Animated.View>
+        </View>
+      ) : showOnboarding ? (
+        <View style={styles.onboardingContainer}>
+          <Image source={require('./assets/branding_logo.png')} style={styles.onboardingLogo} />
+          <Text style={styles.onboardingTitle}>Welcome to LyriX</Text>
+          <Text style={styles.onboardingSubtitle}>Enter your name to personalize your experience</Text>
+          <TextInput
+            style={styles.onboardingInput}
+            placeholder="Your Name"
+            placeholderTextColor="#6b7280"
+            value={tempName}
+            onChangeText={setTempName}
+            autoFocus
+          />
+          <TouchableOpacity style={styles.primaryButton} onPress={handleOnboardingSubmit}>
+            <Text style={styles.primaryButtonText}>Get Started</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <>
+          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
+            {activeTab === 'schedule' && renderSchedule()}
+            {activeTab === 'add' && renderAddSong()}
+            {activeTab === 'search' && renderSearch()}
+          </KeyboardAvoidingView>
+          {!isKeyboardVisible && BottomTabs}
+        </>
+      )}
     </SafeAreaView>
   );
 }
@@ -435,9 +590,55 @@ const styles = StyleSheet.create({
   blackoutButton: { backgroundColor: '#dc2626' },
   actionButtonText: { color: 'white', fontWeight: 'bold' },
 
+  // New Branding & Onboarding Styles
+  splashContainer: { flex: 1, backgroundColor: '#111827', justifyContent: 'center', alignItems: 'center' },
+  splashLogo: { width: 120, height: 120, resizeMode: 'contain', marginBottom: 20 },
+  splashBranding: { color: 'white', fontSize: 32, fontWeight: '900', letterSpacing: 8, marginBottom: 10 },
+  splashSlogan: { color: '#6366f1', fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 2 },
+
+  onboardingContainer: { flex: 1, backgroundColor: '#111827', padding: 30, justifyContent: 'center' },
+  onboardingLogo: { width: 80, height: 80, resizeMode: 'contain', marginBottom: 24, alignSelf: 'center' },
+  onboardingTitle: { color: 'white', fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 12 },
+  onboardingSubtitle: { color: '#9ca3af', fontSize: 16, textAlign: 'center', marginBottom: 40 },
+  onboardingInput: {
+    backgroundColor: '#1f2937',
+    color: 'white',
+    padding: 18,
+    borderRadius: 16,
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: '#374151',
+    marginBottom: 24,
+    textAlign: 'center'
+  },
+
+  welcomeBanner: {
+    backgroundColor: '#1f2937',
+    padding: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#374151',
+    marginBottom: 30,
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 3
+  },
+  greetingText: { color: '#6366f1', fontSize: 14, fontWeight: '700', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 },
+  userNameText: { color: 'white', fontSize: 24, fontWeight: '900', fontStyle: 'italic' },
+
+  logoContainer: { alignItems: 'center', marginBottom: 30, paddingTop: 10 },
+  logo: { width: 80, height: 80, resizeMode: 'contain', marginBottom: 10 },
+  brandingText: { color: 'white', fontSize: 20, fontWeight: '900', letterSpacing: 2 },
+
+  headerLogoContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, paddingTop: 10 },
+  headerLogo: { width: 32, height: 32, resizeMode: 'contain' },
+
   tabContainer: {
     position: 'absolute',
-    bottom: 50, // Moved up as requested
+    bottom: 70, // Moved up even more as requested
     left: 20,
     right: 20,
     alignItems: 'center',
@@ -485,6 +686,7 @@ const styles = StyleSheet.create({
 
   deleteButton: { padding: 8 },
   deleteText: { fontSize: 20 },
+  debugTextSub: { color: '#4b5563', fontSize: 10, marginTop: 2 },
 
   addButton: { backgroundColor: '#2563eb', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8 },
   addButtonText: { color: 'white', fontWeight: 'bold' },
