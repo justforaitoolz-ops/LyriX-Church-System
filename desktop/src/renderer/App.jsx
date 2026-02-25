@@ -38,7 +38,7 @@ function App() {
     const [updateProgress, setUpdateProgress] = useState(0);
     const [updateInfo, setUpdateInfo] = useState(null);
     const [updateError, setUpdateError] = useState('');
-    const [appVersion, setAppVersion] = useState('1.1.5');
+    const [appVersion, setAppVersion] = useState('1.1.6');
 
     const confirmOverwrite = (title) => {
         return new Promise((resolve) => {
