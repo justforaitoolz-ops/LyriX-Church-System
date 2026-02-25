@@ -24,7 +24,20 @@ function startServer(onStatusChange) {
     app.use(cors());
 
     // Serve static files for the remote control UI
-    app.use(express.static(path.join(__dirname, '../../public/remote')));
+    const remotePath = path.join(__dirname, '../../public/remote');
+    app.use(express.static(remotePath));
+
+    // Explicit fallback for root
+    app.get('/', (req, res) => {
+        console.log(`[Server] Serving index.html to ${req.ip}`);
+        res.sendFile(path.join(remotePath, 'index.html'));
+    });
+
+    // Logging middleware for debugging "Cannot GET"
+    app.use((req, res, next) => {
+        console.log(`[Server] ${req.method} ${req.url} - ${res.statusCode}`);
+        next();
+    });
     const server = http.createServer(app);
     io = new Server(server, {
         cors: {

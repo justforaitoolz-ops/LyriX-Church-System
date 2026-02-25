@@ -24,6 +24,7 @@ function App() {
     const [customAlert, setCustomAlert] = useState(null);
     const [songToDelete, setSongToDelete] = useState(null);
     const [overwritePrompt, setOverwritePrompt] = useState(null);
+    const [dbStatus, setDbStatus] = useState({ status: 'connecting', authenticated: false });
     const searchQueryRef = useRef('');
     const activeFilterRef = useRef('All');
 
@@ -37,7 +38,7 @@ function App() {
     const [updateProgress, setUpdateProgress] = useState(0);
     const [updateInfo, setUpdateInfo] = useState(null);
     const [updateError, setUpdateError] = useState('');
-    const [appVersion, setAppVersion] = useState('1.0.8');
+    const [appVersion, setAppVersion] = useState('1.1.5');
 
     const confirmOverwrite = (title) => {
         return new Promise((resolve) => {
@@ -66,6 +67,7 @@ function App() {
     const [welcomeStep, setWelcomeStep] = useState(() => !localStorage.getItem('setting_churchName') ? 1 : 0);
     const [showAppControls, setShowAppControls] = useState(() => localStorage.getItem('setting_showAppControls') !== 'false');
     const [showDatabaseManagement, setShowDatabaseManagement] = useState(() => localStorage.getItem('setting_showDatabaseManagement') !== 'false');
+    const [showMobileDownloadQR, setShowMobileDownloadQR] = useState(false);
 
     // Library Categories
     const allCategories = ['English Choruses', 'English Hymns', 'Telugu Songs', 'Hindi Songs', 'Special Songs', 'Children Songs'];
@@ -78,9 +80,9 @@ function App() {
         return saved ? JSON.parse(saved) : [];
     });
 
-    const stateRef = useRef({ slides: [], index: 0, currentSong: null, isModalOpen: false });
+    const stateRef = useRef({ slides: [], index: 0, currentSong: null, isModalOpen: false, schedule: [] });
 
-    useEffect(() => { stateRef.current = { slides, index: currentSlideIndex, currentSong, isModalOpen: showAddModal || !!songToDelete }; }, [slides, currentSlideIndex, currentSong, showAddModal, songToDelete]);
+    useEffect(() => { stateRef.current = { slides, index: currentSlideIndex, currentSong, isModalOpen: showAddModal || !!songToDelete, schedule }; }, [slides, currentSlideIndex, currentSong, showAddModal, songToDelete, schedule]);
 
     // Save settings to localStorage whenever they change
     useEffect(() => {
@@ -125,6 +127,15 @@ function App() {
                 if (v) setAppVersion(v);
             });
 
+            // DB Status Listener
+            window.electron.invoke('get-db-status').then(status => {
+                if (status) setDbStatus(status);
+            });
+
+            const unsubDbStatusUpdate = window.electron.onDbStatus((event, status) => {
+                setDbStatus(status);
+            });
+
             const unsubProjectorState = window.electron.onProjectorStateChanged((event, isOpen) => {
                 setIsProjectorOpen(isOpen);
             });
@@ -163,6 +174,24 @@ function App() {
                 else if (cmd.action === 'prev-slide') { if (index > 0) setCurrentSlideIndex(index - 1); }
                 else if (cmd.action === 'blank-screen') { setIsBlack(prev => !prev); }
                 else if (cmd.action === 'set-song') { selectSong(cmd.song); }
+                else if (cmd.action === 'next-song') {
+                    const { schedule, currentSong } = stateRef.current;
+                    if (schedule.length > 1) {
+                        const currentIndex = schedule.findIndex(s => s.instanceId === (currentSong?.instanceId || currentSong?.id));
+                        if (currentIndex < schedule.length - 1) {
+                            selectSong(schedule[currentIndex + 1]);
+                        }
+                    }
+                }
+                else if (cmd.action === 'prev-song') {
+                    const { schedule, currentSong } = stateRef.current;
+                    if (schedule.length > 1) {
+                        const currentIndex = schedule.findIndex(s => s.instanceId === (currentSong?.instanceId || currentSong?.id));
+                        if (currentIndex > 0) {
+                            selectSong(schedule[currentIndex - 1]);
+                        }
+                    }
+                }
             });
 
             const unsubKeyPress = window.electron.onProjectorKeyPress((event, key) => {
@@ -193,6 +222,10 @@ function App() {
 
             const unsubSongsUpdate = window.electron.onSongsUpdate(() => {
                 handleSearch(searchQueryRef.current, activeFilterRef.current);
+            });
+
+            const unsubAppRunning = window.electron.onAppRunningAlert(() => {
+                setCustomAlert('The application is already running.');
             });
 
             handleSearch('', 'All');
@@ -229,7 +262,7 @@ function App() {
                         setTimeout(() => splash.remove(), 600);
                     }, cName ? 2500 : 800); // Wait longer if showing greeting
 
-                }, 1000); // 1s logo pulse
+                }, 3000); // 3s logo pulse (increased by 2s)
             }
 
             return () => {
@@ -242,6 +275,8 @@ function App() {
                 if (unsubUpdateStatus) unsubUpdateStatus();
                 if (unsubUpdateProgress) unsubUpdateProgress();
                 if (unsubSongsUpdate) unsubSongsUpdate();
+                if (unsubAppRunning) unsubAppRunning();
+                if (unsubDbStatusUpdate) unsubDbStatusUpdate();
             };
         }
     }, []);
@@ -593,6 +628,40 @@ function App() {
                                 </div>
                             </div>
 
+                            {/* Database Connection Status Group */}
+                            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+                                <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-3">
+                                    <span className="p-1.5 bg-indigo-100 text-indigo-600 rounded-lg">
+                                        <DatabaseIcon className="w-5 h-5" />
+                                    </span>
+                                    Database Connection
+                                </h3>
+                                <div className="flex items-center justify-between bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    <div className="flex items-center gap-3">
+                                        <div className={clsx(
+                                            "w-3 h-3 rounded-full animate-pulse",
+                                            dbStatus.status === 'connected' ? "bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)]" :
+                                                dbStatus.status === 'authenticating' ? "bg-yellow-500" : "bg-red-500"
+                                        )}></div>
+                                        <div>
+                                            <div className="text-sm font-bold text-slate-700 capitalize">{dbStatus.status.replace('_', ' ')}</div>
+                                            <div className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Cloud Sync: {dbStatus.authenticated ? 'Active' : 'Offline'}</div>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => window.location.reload()}
+                                        className="px-4 py-1.5 bg-white border border-slate-200 hover:border-indigo-400 hover:text-indigo-600 rounded-lg text-xs font-bold transition-all shadow-sm"
+                                    >
+                                        Reconnect
+                                    </button>
+                                </div>
+                                {dbStatus.status === 'auth_error' && (
+                                    <div className="mt-3 p-3 bg-red-50 text-red-600 text-xs rounded-lg border border-red-100 italic">
+                                        <strong>Permission Denied:</strong> Please check your Firebase configuration or internet connection.
+                                    </div>
+                                )}
+                            </div>
+
                             {/* Mobile Remote Group */}
                             <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
                                 <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
@@ -642,6 +711,31 @@ function App() {
                                             </div>
                                         )}
                                     </div>
+                                </div>
+                            </div>
+
+                            {/* Mobile App Download Group */}
+                            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+                                <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                    <span className="p-1.5 bg-blue-100 text-blue-600 rounded-lg">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                    </span>
+                                    Mobile App Download
+                                </h3>
+                                <div className="text-sm text-slate-500 italic mb-4">
+                                    Download the official LyriX Mobile App to control this computer and manage your song library from anywhere!
+                                </div>
+                                <div className="flex items-center justify-between bg-blue-50/50 rounded-xl p-5 border border-blue-100/50">
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-bold text-slate-700">Get the APK Directly</span>
+                                        <span className="text-xs text-slate-500 mt-1">Scan the QR code to download the latest mobile version.</span>
+                                    </div>
+                                    <button
+                                        onClick={() => setShowMobileDownloadQR(true)}
+                                        className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/20 transition-all font-sans"
+                                    >
+                                        Show QR Code
+                                    </button>
                                 </div>
                             </div>
 
@@ -1077,6 +1171,7 @@ function App() {
                                 schedule={schedule}
                                 onRemove={handleRemoveFromSchedule}
                                 onReorder={handleReorderSchedule}
+                                onRefresh={fetchSchedule}
                                 onSelect={(song) => {
                                     selectSong(song);
                                     if (!isProjectorOpen) {
@@ -1415,6 +1510,29 @@ function App() {
                         </div>
                     </div>
                 )}
+
+                {/* Mobile App Download QR Modal */}
+                {showMobileDownloadQR && (
+                    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[150] flex items-center justify-center p-4">
+                        <div className="bg-white rounded-[2.5rem] shadow-2xl p-8 max-w-sm w-full animate-fade-in border border-slate-100 flex flex-col items-center">
+                            <h3 className="text-2xl font-black text-slate-800 mb-2">Download Mobile App</h3>
+                            <p className="text-sm text-slate-500 text-center mb-8 italic px-4">Scan this QR code with your phone to jump straight to the direct APK download.</p>
+
+                            <div className="bg-white p-6 border-4 border-slate-50 rounded-[2rem] shadow-inner mb-8">
+                                <QRCode value={`https://github.com/justforaitoolz-ops/LyriX-Church-System/releases/download/v${appVersion}/LyriX-Mobile.apk`} size={200} level="M" />
+                            </div>
+
+                            <div className="flex flex-col w-full gap-3">
+                                <button
+                                    onClick={() => setShowMobileDownloadQR(false)}
+                                    className="w-full py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold transition-all"
+                                >
+                                    Dismiss
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -1573,7 +1691,7 @@ function SongPreviewControls({ currentSong, slides, currentSlideIndex, setCurren
     )
 }
 
-function SundayServiceList({ schedule, onRemove, onReorder, onSelect, currentSongId }) {
+function SundayServiceList({ schedule, onRemove, onReorder, onSelect, onRefresh, currentSongId }) {
     if (schedule.length === 0) {
         return (
             <div className="w-[320px] bg-slate-50 flex flex-col items-center justify-center text-slate-400 section-split-border">
@@ -1605,8 +1723,17 @@ function SundayServiceList({ schedule, onRemove, onReorder, onSelect, currentSon
                     <span className="text-blue-600"><CalendarIcon /></span>
                     Sunday Service
                 </h2>
-                <div className="text-xs font-bold bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full italic">
-                    {schedule.length}
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => onRefresh && onRefresh()}
+                        className="p-1.5 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
+                        title="Refresh Schedule"
+                    >
+                        <RefreshIcon className="w-4 h-4" />
+                    </button>
+                    <div className="text-xs font-bold bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full italic">
+                        {schedule.length}
+                    </div>
                 </div>
             </div>
 
@@ -2074,5 +2201,7 @@ const GlobeIcon = (props) => <svg {...props} fill="none" stroke="currentColor" v
 const CalendarIcon = (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
 const SettingsIcon = (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
 const HeartIcon = (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+const RefreshIcon = (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+const DatabaseIcon = (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
 
 export default App

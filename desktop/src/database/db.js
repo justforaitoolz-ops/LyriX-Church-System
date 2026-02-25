@@ -12,6 +12,48 @@ const SCHEDULE_BACKUP_PATH = path.join(__dirname, 'schedule.json');
 
 let songsCache = [];
 let scheduleCache = [];
+let dbStatus = 'connecting';
+let authPromise = null;
+
+function broadcastDbStatus() {
+    if (global.broadcastDbStatus) {
+        global.broadcastDbStatus({
+            status: dbStatus,
+            authenticated: !!auth.currentUser
+        });
+    }
+}
+
+async function ensureAuth() {
+    if (auth.currentUser) {
+        if (dbStatus !== 'connected') {
+            dbStatus = 'connected';
+            broadcastDbStatus();
+        }
+        return;
+    }
+    if (authPromise) return authPromise;
+
+    console.log("Waiting for Firebase Authentication...");
+    dbStatus = 'authenticating';
+    broadcastDbStatus();
+
+    authPromise = signInAnonymously(auth)
+        .then(() => {
+            console.log("Authenticated anonymously with Firebase");
+            dbStatus = 'connected';
+            broadcastDbStatus();
+            authPromise = null;
+        })
+        .catch(err => {
+            console.error("Firebase Authentication failed:", err);
+            dbStatus = 'auth_error';
+            broadcastDbStatus();
+            authPromise = null;
+            throw err;
+        });
+    return authPromise;
+}
 
 async function initDb() {
     console.log("Initializing local DB cache...");
@@ -41,10 +83,9 @@ async function initDb() {
     console.log("Connecting to Firestore & Auth...");
     // Authenticate app
     try {
-        await signInAnonymously(auth);
-        console.log("Authenticated anonymously with Firebase");
+        await ensureAuth();
     } catch (err) {
-        console.error("Firebase Authentication failed:", err);
+        // Error already logged in ensureAuth
     }
 
     // Subscribe to Songs
@@ -126,14 +167,26 @@ function getSchedule() {
 }
 
 async function addSong(songData) {
-    // Firestore set
-    await setDoc(doc(db, "songs", songData.id), songData);
-    // Cache updates automatically via listener
-    return songData;
+    try {
+        await ensureAuth();
+        // Firestore set
+        await setDoc(doc(db, "songs", songData.id), songData);
+        // Cache updates automatically via listener
+        return songData;
+    } catch (err) {
+        console.error("Failed to add song:", err);
+        throw err;
+    }
 }
 
 async function updateSong(songData) {
-    await setDoc(doc(db, "songs", songData.id), songData, { merge: true });
+    try {
+        await ensureAuth();
+        await setDoc(doc(db, "songs", songData.id), songData, { merge: true });
+    } catch (err) {
+        console.error("Failed to update song:", err);
+        throw err;
+    }
 }
 
 async function getNextId(category) {
@@ -162,33 +215,51 @@ async function getNextId(category) {
 }
 
 async function addToSchedule(songId) {
-    const song = getSong(songId);
-    if (!song) throw new Error('Song not found');
+    try {
+        await ensureAuth();
+        const song = getSong(songId);
+        if (!song) throw new Error('Song not found');
 
-    const newItem = {
-        instanceId: Date.now().toString(),
-        songId: song.id,
-        title: song.title || song.preview,
-        category: song.category
-    };
+        const newItem = {
+            instanceId: Date.now().toString(),
+            songId: song.id,
+            title: song.title || song.preview,
+            category: song.category
+        };
 
-    const newSchedule = [...scheduleCache, newItem];
+        const newSchedule = [...scheduleCache, newItem];
 
-    // Update Firestore
-    await setDoc(doc(db, "schedules", "sunday-service"), { items: newSchedule });
+        // Update Firestore
+        await setDoc(doc(db, "schedules", "sunday-service"), { items: newSchedule });
 
-    return newSchedule;
+        return newSchedule;
+    } catch (err) {
+        console.error("Failed to add to schedule:", err);
+        throw err;
+    }
 }
 
 async function removeFromSchedule(instanceId) {
-    const newSchedule = scheduleCache.filter(i => i.instanceId !== instanceId);
-    await setDoc(doc(db, "schedules", "sunday-service"), { items: newSchedule });
-    return newSchedule;
+    try {
+        await ensureAuth();
+        const newSchedule = scheduleCache.filter(i => i.instanceId !== instanceId);
+        await setDoc(doc(db, "schedules", "sunday-service"), { items: newSchedule });
+        return newSchedule;
+    } catch (err) {
+        console.error("Failed to remove from schedule:", err);
+        throw err;
+    }
 }
 
 async function reorderSchedule(newSchedule) {
-    await setDoc(doc(db, "schedules", "sunday-service"), { items: newSchedule });
-    return newSchedule;
+    try {
+        await ensureAuth();
+        await setDoc(doc(db, "schedules", "sunday-service"), { items: newSchedule });
+        return newSchedule;
+    } catch (err) {
+        console.error("Failed to reorder schedule:", err);
+        throw err;
+    }
 }
 
 async function deleteSong(id) {
@@ -280,11 +351,20 @@ async function deleteSong(id) {
     }
 
     // 6. Fire and Forget the network payload so the UI isn't blocked!
-    Promise.all(batches.map(b => b.commit()))
-        .then(() => console.log(`Successfully shifted ${songsToShift.length} songs in the background.`))
-        .catch(e => console.error("Batch delete/shift error:", e));
+    ensureAuth().then(() => {
+        Promise.all(batches.map(b => b.commit()))
+            .then(() => console.log(`Successfully shifted ${songsToShift.length} songs in the background.`))
+            .catch(e => console.error("Batch delete/shift error:", e));
+    }).catch(e => console.error("Auth failed for delete operation:", e));
 
     return true;
+}
+
+function getDbStatus() {
+    return {
+        status: dbStatus,
+        authenticated: !!auth.currentUser
+    };
 }
 
 module.exports = {
@@ -298,5 +378,6 @@ module.exports = {
     getSchedule,
     addToSchedule,
     removeFromSchedule,
-    reorderSchedule
+    reorderSchedule,
+    getDbStatus
 };

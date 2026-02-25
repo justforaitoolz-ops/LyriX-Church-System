@@ -2,19 +2,49 @@
   {
     "category": "English Hymns",
     "title": "All to Jesus I surrender,",
-    "songId": "H63",
-    "instanceId": "1771747615613"
+    "instanceId": "1771747615613",
+    "songId": "H63"
   },
   {
     "category": "English Hymns",
     "title": "Great is Thy faithfulness,  O God my Father,",
-    "songId": "H18",
-    "instanceId": "1771747637959"
+    "instanceId": "1771747637959",
+    "songId": "H18"
   },
   {
     "category": "Special Songs",
     "title": "Our Father (Don Moen)",
     "songId": "S1",
     "instanceId": "1771748168481"
+  },
+  {
+    "songId": "C219",
+    "instanceId": "1771816128133",
+    "title": "Open Thou mIne eyes,",
+    "category": "English Choruses"
+  },
+  {
+    "instanceId": "1771833964780",
+    "songId": "C27",
+    "title": "Blessed are the pure in heart,",
+    "category": "English Choruses"
+  },
+  {
+    "category": "English Choruses",
+    "title": "Jesus is Alive today (2)",
+    "songId": "C155",
+    "instanceId": "1771835388565"
+  },
+  {
+    "title": "I’ll say, Yes, Lord, Yes",
+    "category": "English Choruses",
+    "songId": "C307",
+    "instanceId": "1771921098727"
+  },
+  {
+    "title": "All there is of me, Lord,",
+    "category": "English Choruses",
+    "instanceId": "1771931883856",
+    "songId": "C11"
   }
 ]

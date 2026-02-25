@@ -29,7 +29,14 @@
     "extra": {
       "eas": {
         "projectId": "8f79e421-f1e5-4723-b554-0d56a693c33b"
-      }
+      },
+      "buildNumber": "17"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/8f79e421-f1e5-4723-b554-0d56a693c33b"
     },
     "owner": "bsamboddu"
   }

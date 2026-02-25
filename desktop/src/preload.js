@@ -20,6 +20,8 @@ contextBridge.exposeInMainWorld('electron', {
     onProjectorSyncSettings: exposeListener('settings-update'),
     onUpdateStatus: exposeListener('update-status'),
     onUpdateProgress: exposeListener('update-progress'),
+    onAppRunningAlert: exposeListener('app-running-alert'),
+    onDbStatus: exposeListener('db-status-updated'),
     sendAction: (action, data) => ipcRenderer.send('action', { action, data }),
     invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
     deleteSong: (id) => ipcRenderer.invoke('delete-song', id),

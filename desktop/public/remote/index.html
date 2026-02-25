@@ -196,13 +196,32 @@
 
     <div class="controls-grid">
         <div class="nav-row">
+            <button class="btn btn-prev" onclick="sendCommand('prev-song')">
+                <span class="btn-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                </span>
+                Prev Song
+            </button>
+            <button class="btn btn-next" onclick="sendCommand('next-song')">
+                <span class="btn-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                </span>
+                Next Song
+            </button>
+        </div>
+
+        <div class="nav-row">
             <button class="btn btn-prev" onclick="sendCommand('prev-slide')">
                 <span class="btn-icon">
                     <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
                 </span>
-                Previous
+                Prev Slide
             </button>
             <button class="btn btn-next" onclick="sendCommand('next-slide')">
                 <span class="btn-icon">
@@ -210,7 +229,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                 </span>
-                Next
+                Next Slide
             </button>
         </div>
 
