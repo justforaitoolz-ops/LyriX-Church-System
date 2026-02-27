@@ -48,7 +48,14 @@ async function ensureAuth() {
         .catch(err => {
             console.error("Firebase Authentication failed:", err);
             dbStatus = 'auth_error';
-            broadcastDbStatus();
+            if (global.broadcastDbStatus) {
+                const errorDetail = err.code ? `[${err.code}] ${err.message}` : err.message || JSON.stringify(err);
+                global.broadcastDbStatus({
+                    status: 'auth_error',
+                    authenticated: false,
+                    error: errorDetail
+                });
+            }
             authPromise = null;
             throw err;
         });
@@ -139,6 +146,38 @@ async function initDb() {
     });
 
     return true; // Async init simulation
+}
+
+async function syncSongs() {
+    console.log("Triggering manual songs sync...");
+    try {
+        await ensureAuth();
+        const songsQuery = query(collection(db, "songs"), orderBy("id"));
+        const snapshot = await getDocs(songsQuery);
+        const songs = snapshot.docs.map(d => d.data());
+
+        songs.sort((a, b) => {
+            return a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: 'base' });
+        });
+
+        songsCache = songs;
+        console.log(`Manual Sync: Updated Songs Cache with ${songsCache.length} songs`);
+
+        // Save to local backup
+        try {
+            fs.writeFileSync(SONGS_BACKUP_PATH, JSON.stringify(songsCache, null, 2));
+        } catch (err) {
+            console.error("Failed to save local songs backup during sync:", err);
+        }
+
+        if (global.broadcastSongsUpdate) {
+            global.broadcastSongsUpdate(songsCache);
+        }
+        return { success: true, count: songsCache.length };
+    } catch (err) {
+        console.error("Manual sync failed:", err);
+        throw err;
+    }
 }
 
 // Search is now local filtering of cache for speed, 
@@ -379,5 +418,6 @@ module.exports = {
     addToSchedule,
     removeFromSchedule,
     reorderSchedule,
-    getDbStatus
+    getDbStatus,
+    syncSongs
 };

@@ -38,7 +38,8 @@ function App() {
     const [updateProgress, setUpdateProgress] = useState(0);
     const [updateInfo, setUpdateInfo] = useState(null);
     const [updateError, setUpdateError] = useState('');
-    const [appVersion, setAppVersion] = useState('1.1.6');
+    const [appVersion, setAppVersion] = useState('1.2.3');
+    const [isSyncing, setIsSyncing] = useState(false);
 
     const confirmOverwrite = (title) => {
         return new Promise((resolve) => {
@@ -240,7 +241,36 @@ function App() {
                         "Grace and Peace!",
                         "Welcome in His Name!",
                         "Blessings to you!",
-                        "Rejoice in the Lord!"
+                        "Rejoice in the Lord!",
+                        "Jesus is Lord!",
+                        "God is Good, All the Time!",
+                        "Faith Over Fear!",
+                        "Abundant Grace!",
+                        "Let Everything that has Breath Praise the Lord!",
+                        "The Lord is My Shepherd!",
+                        "Victory in Jesus!",
+                        "Peace be with You!",
+                        "Walking in the Spirit!",
+                        "Hallelujah! Praise Yahweh!",
+                        "Mercies are New Every Morning!",
+                        "Transformed by Grace!",
+                        "Christ in You, the Hope of Glory!",
+                        "Worship Him in Spirit and Truth!",
+                        "He is Risen Indeed!",
+                        "Let Your Light Shine!",
+                        "Be Still and Know He is God!",
+                        "Strength for Today, Hope for Tomorrow!",
+                        "Greater is He that is in You!",
+                        "Nothing is Impossible with God!",
+                        "Rooted and Grounded in Love!",
+                        "The Joy of the Lord is Your Strength!",
+                        "Blessed to be a Blessing!",
+                        "In Everything Give Thanks!",
+                        "Seek First the Kingdom!",
+                        "He Who Began a Good Work...",
+                        "Trust in the Lord with All Your Heart!",
+                        "His Love Endures Forever!",
+                        "Chosen, Holy, and Dearly Loved!"
                     ];
                     const randGreeting = greetings[Math.floor(Math.random() * greetings.length)];
                     const cName = localStorage.getItem('setting_churchName') || '';
@@ -648,16 +678,50 @@ function App() {
                                             <div className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Cloud Sync: {dbStatus.authenticated ? 'Active' : 'Offline'}</div>
                                         </div>
                                     </div>
-                                    <button
-                                        onClick={() => window.location.reload()}
-                                        className="px-4 py-1.5 bg-white border border-slate-200 hover:border-indigo-400 hover:text-indigo-600 rounded-lg text-xs font-bold transition-all shadow-sm"
-                                    >
-                                        Reconnect
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={async () => {
+                                                if (isSyncing) return;
+                                                setIsSyncing(true);
+                                                try {
+                                                    const result = await window.electron.invoke('sync-songs');
+                                                    if (result.success) {
+                                                        setCustomAlert(`Sync Complete! ${result.count} songs up to date.`);
+                                                    }
+                                                } catch (e) {
+                                                    setCustomAlert(`Sync Failed: ${e.message}`);
+                                                } finally {
+                                                    setIsSyncing(false);
+                                                }
+                                            }}
+                                            disabled={isSyncing}
+                                            className={clsx(
+                                                "px-4 py-1.5 border rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-2",
+                                                isSyncing
+                                                    ? "bg-indigo-50 text-indigo-400 border-indigo-100 cursor-not-allowed"
+                                                    : "bg-white border-slate-200 hover:border-indigo-400 hover:text-indigo-600"
+                                            )}
+                                        >
+                                            <svg className={clsx("w-3 h-3", isSyncing && "animate-spin")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                            </svg>
+                                            {isSyncing ? 'Syncing...' : 'Sync'}
+                                        </button>
+                                        <button
+                                            onClick={() => window.location.reload()}
+                                            className="px-4 py-1.5 bg-white border border-slate-200 hover:border-indigo-400 hover:text-indigo-600 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-2"
+                                        >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                            Reconnect
+                                        </button>
+                                    </div>
                                 </div>
                                 {dbStatus.status === 'auth_error' && (
                                     <div className="mt-3 p-3 bg-red-50 text-red-600 text-xs rounded-lg border border-red-100 italic">
-                                        <strong>Permission Denied:</strong> Please check your Firebase configuration or internet connection.
+                                        <div className="font-bold mb-1">Authentication Failed:</div>
+                                        <div className="font-mono bg-white/50 p-1.5 rounded border border-red-100/50 break-all">
+                                            {dbStatus.error || "Permission Denied: Please check your Firebase configuration or internet connection."}
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -718,7 +782,10 @@ function App() {
                             <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
                                 <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
                                     <span className="p-1.5 bg-blue-100 text-blue-600 rounded-lg">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11v3m0 0l-2-2m2 2l2-2" />
+                                        </svg>
                                     </span>
                                     Mobile App Download
                                 </h3>
@@ -1150,7 +1217,6 @@ function App() {
                                                             handleAddToSchedule(song.id);
                                                         }}
                                                         className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                                                        title="Add to Sunday Schedule"
                                                     >
                                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                                                     </button>
@@ -1718,7 +1784,7 @@ function SundayServiceList({ schedule, onRemove, onReorder, onSelect, onRefresh,
 
     return (
         <div className="w-[320px] flex flex-col border-r border-slate-200 bg-white z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="p-3 border-b border-slate-100 flex items-center justify-between">
                 <h2 className="font-bold text-slate-700 flex items-center gap-2">
                     <span className="text-blue-600"><CalendarIcon /></span>
                     Sunday Service
@@ -1743,11 +1809,11 @@ function SundayServiceList({ schedule, onRemove, onReorder, onSelect, onRefresh,
                         key={item.instanceId}
                         onClick={() => onSelect(item)}
                         className={clsx(
-                            "p-3 border-b border-slate-50 cursor-pointer transition-all group flex items-start gap-3",
+                            "py-2 px-3 border-b border-slate-50 cursor-pointer transition-all group flex items-center gap-3",
                             currentSongId === item.id ? "bg-blue-50" : "hover:bg-slate-50"
                         )}
                     >
-                        <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center font-bold text-xs text-slate-300 bg-slate-100 rounded mt-0.5">
+                        <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center font-bold text-xs text-slate-300 bg-slate-100 rounded">
                             {index + 1}
                         </div>
 
@@ -1772,7 +1838,6 @@ function SundayServiceList({ schedule, onRemove, onReorder, onSelect, onRefresh,
                             <button
                                 onClick={(e) => { e.stopPropagation(); onRemove(item.instanceId); }}
                                 className="p-1 hover:bg-red-100 rounded text-slate-300 hover:text-red-500"
-                                title="Remove from schedule"
                             >
                                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             </button>

@@ -225,6 +225,10 @@ if (!gotTheLock) {
             const { getDbStatus } = require('./database/db.js');
             return getDbStatus();
         });
+        ipcMain.handle('sync-songs', async () => {
+            const { syncSongs } = require('./database/db.js');
+            return syncSongs();
+        });
 
         ipcMain.handle('search-lyrics', async (event, query) => {
             console.log(`[Search] Searching using Browser: ${query}`);
@@ -389,17 +393,29 @@ if (!gotTheLock) {
 
             try {
                 console.log(`[Fetch] Loading: ${url}`);
-                await fetchWindow.loadURL(url);
+
+                // Optimized loading: Resolve as soon as DOM is ready or after a timeout
+                const loadPromise = new Promise((resolve, reject) => {
+                    const timeout = setTimeout(() => resolve(), 5000); // Max 5s wait for full load
+                    fetchWindow.webContents.once('dom-ready', () => {
+                        clearTimeout(timeout);
+                        resolve();
+                    });
+                    fetchWindow.loadURL(url).catch(reject);
+                });
+
+                await loadPromise;
 
                 const content = await fetchWindow.webContents.executeJavaScript(`
                 new Promise(resolve => {
-                    setTimeout(() => {
-                        const removables = ['script', 'style', 'nav', 'header', 'footer', 'iframe', 'img', 'svg', 'button', 'form'];
+                    const extract = () => {
+                        const removables = ['script', 'style', 'nav', 'header', 'footer', 'iframe', 'img', 'svg', 'button', 'form', 'aside', 'ads'];
                         removables.forEach(tag => document.querySelectorAll(tag).forEach(el => el.remove()));
                         
                         let container = document.querySelector('[class*="Lyrics__Container"]');
                         if (!container) container = document.querySelector('.lyrics'); 
                         if (!container) container = document.querySelector('.lyricbox'); 
+                        if (!container) container = document.querySelector('.lyrics-body');
                         
                         if (!container) {
                             const divs = Array.from(document.querySelectorAll('div'));
@@ -410,19 +426,27 @@ if (!gotTheLock) {
                         }
                         
                         if (!container) container = document.body;
+                        return container;
+                    };
 
-                        if (container) {
-                            // Preserve newlines
-                            // Use a unique token for BR so we can distinguish hard breaks from layout spacing if needed
+                    // Try multiple times if container not found yet
+                    let attempts = 0;
+                    const check = () => {
+                        const container = extract();
+                        if ((container && container.innerText.length > 100) || attempts > 5) {
+                             // Preserve newlines
                             container.querySelectorAll('br').forEach(br => br.replaceWith('__BR__'));
                             container.querySelectorAll('p').forEach(p => p.append('__BR____BR__'));
                             resolve(container.innerText);
                         } else {
-                            resolve("Could not auto-detect lyrics.");
+                            attempts++;
+                            setTimeout(check, 100);
                         }
-                    }, 100); // Reduced delay to make it snappier
+                    };
+                    check();
                 });
             `);
+
 
                 // Post-processing
                 let text = content.replace(/__BR__/g, '\n');
@@ -478,6 +502,15 @@ if (!gotTheLock) {
                     console.log("Main Process: Connection rejected (Max devices reached).");
                     socket.emit('connection-rejected', { reason: 'Device limit reached' });
                     socket.disconnect(true);
+
+                    // Re-broadcast the status after disconnection to correct the UI count
+                    setTimeout(() => {
+                        const count = io.engine.clientsCount;
+                        const currentStatus = { ...currentServerStatus, connections: count };
+                        BrowserWindow.getAllWindows().forEach(win => {
+                            if (!win.isDestroyed()) win.webContents.send('status-update', currentStatus);
+                        });
+                    }, 500);
                     return;
                 }
 
