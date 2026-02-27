@@ -2000,7 +2000,7 @@ function AddSongModal({ onClose, onSave, initialData, defaultCategory, onConfirm
                 onClose();
             }
         } catch (e) {
-            alert('Failed to save song: ' + e.message);
+            setCustomAlert('Failed to save song: ' + e.message);
         } finally {
             setLoading(false);
         }
