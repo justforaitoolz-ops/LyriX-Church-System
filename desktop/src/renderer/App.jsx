@@ -282,12 +282,22 @@ function App() {
                     const cName = localStorage.getItem('setting_churchName') || '';
                     const cPlace = localStorage.getItem('setting_churchPlace') || '';
 
-                    if (cName) {
+                    if (splash) {
                         // Change from logo to text
                         splash.innerHTML = `
-                            <div style="text-align: center; animation: fade-in 0.8s ease-out;">
-                                <h1 class="font-serif" style="font-size: 2.75rem; font-weight: bold; color: #1e293b; margin-bottom: 0.5rem;">${randGreeting}</h1>
-                                <p class="font-display" style="font-size: 1.15rem; color: #475569; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em;">${cName} ${cPlace ? `&bull; ${cPlace}` : ''}</p>
+                            <div style="text-align: center; animation: fade-in 0.8s ease-out; padding: 2rem;">
+                                <h1 class="font-serif" style="font-size: 2.5rem; font-weight: bold; color: #1e293b; margin-bottom: 1rem; line-height: 1.2;">
+                                    ${randGreeting}
+                                </h1>
+                                ${cName ? `
+                                    <p class="font-display" style="font-size: 1.25rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em;">
+                                        ${cName} ${cPlace ? `&bull; ${cPlace}` : ''}
+                                    </p>
+                                ` : `
+                                    <p class="font-display" style="font-size: 1rem; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em;">
+                                        LyriX Church System
+                                    </p>
+                                `}
                             </div>
                         `;
                     }
@@ -295,8 +305,8 @@ function App() {
                     setTimeout(() => {
                         splash.style.opacity = '0';
                         splash.style.visibility = 'hidden';
-                        setTimeout(() => splash.remove(), 600);
-                    }, cName ? 2500 : 800); // Wait longer if showing greeting
+                        setTimeout(() => splash.remove(), 800);
+                    }, 3000); // Consistent 3s for readability
 
                 }, 3000); // 3s logo pulse (increased by 2s)
             }
