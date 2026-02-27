@@ -46,6 +46,20 @@ if (!gotTheLock) {
 
         mainWindow.maximize();
 
+        let isQuitting = false;
+
+        mainWindow.on('close', (e) => {
+            if (!isQuitting) {
+                e.preventDefault();
+                mainWindow.webContents.send('request-quit');
+            }
+        });
+
+        ipcMain.handle('force-quit', () => {
+            isQuitting = true;
+            app.quit();
+        });
+
         if (process.env.NODE_ENV === 'development') {
             mainWindow.loadURL('http://localhost:5173');
         } else {

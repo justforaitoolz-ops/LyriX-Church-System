@@ -6,6 +6,6 @@ rmdir /s /q release_v2
 echo Starting Build and Publish...
 call npx vite build && npx electron-builder --publish always
 echo Uploading Mobile APK to GitHub Release...
-gh release upload v1.2.4 "LyriX-Mobile.apk" --clobber
+gh release upload v1.2.5 "LyriX-Mobile.apk" --clobber
 echo.
 echo Build process completed. Check above for errors.

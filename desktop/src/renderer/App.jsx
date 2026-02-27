@@ -38,8 +38,9 @@ function App() {
     const [updateProgress, setUpdateProgress] = useState(0);
     const [updateInfo, setUpdateInfo] = useState(null);
     const [updateError, setUpdateError] = useState('');
-    const [appVersion, setAppVersion] = useState('1.2.4');
+    const [appVersion, setAppVersion] = useState('1.2.5');
     const [isSyncing, setIsSyncing] = useState(false);
+    const [showQuitModal, setShowQuitModal] = useState(false);
 
     const confirmOverwrite = (title) => {
         return new Promise((resolve) => {
@@ -229,6 +230,10 @@ function App() {
                 setCustomAlert('The application is already running.');
             });
 
+            const unsubRequestQuit = window.electron.onRequestQuit(() => {
+                setShowQuitModal(true);
+            });
+
             handleSearch('', 'All');
             fetchSchedule();
 
@@ -237,40 +242,41 @@ function App() {
             if (splash) {
                 setTimeout(() => {
                     const greetings = [
-                        "Praise the Lord!",
-                        "Grace and Peace!",
-                        "Welcome in His Name!",
-                        "Blessings to you!",
-                        "Rejoice in the Lord!",
-                        "Jesus is Lord!",
-                        "God is Good, All the Time!",
-                        "Faith Over Fear!",
-                        "Abundant Grace!",
-                        "Let Everything that has Breath Praise the Lord!",
-                        "The Lord is My Shepherd!",
-                        "Victory in Jesus!",
-                        "Peace be with You!",
-                        "Walking in the Spirit!",
-                        "Hallelujah! Praise Yahweh!",
-                        "Mercies are New Every Morning!",
-                        "Transformed by Grace!",
-                        "Christ in You, the Hope of Glory!",
-                        "Worship Him in Spirit and Truth!",
-                        "He is Risen Indeed!",
-                        "Let Your Light Shine!",
-                        "Be Still and Know He is God!",
-                        "Strength for Today, Hope for Tomorrow!",
+                        "Praise the Lord! Welcome to Worship!",
+                        "Grace and Peace be Multiplication to You!",
+                        "Welcome in the Precious Name of Jesus!",
+                        "May the Lord Bless Your Service!",
+                        "Rejoice! The Lord is with us Today!",
+                        "Jesus is Lord over this House!",
+                        "God is Good, All the Time! Welcome!",
+                        "Strength and Honor belong to Him alone!",
+                        "In His Presence there is Fullness of Joy!",
+                        "Let Everything that has Breath Praise Him!",
+                        "The Lord is My Shepherd, I shall not want!",
+                        "Victory is ours through Jesus Christ!",
+                        "Peace be with You and Your Family!",
+                        "Walking in the Light of His Word!",
+                        "Hallelujah! Glory to the Most High!",
+                        "His Mercies are New Every Morning!",
+                        "Welcome! Come, let us adore Him!",
+                        "Christ in Us, the Hope of Glory!",
+                        "Worship the King in Spirit and Truth!",
+                        "He is Risen! Welcome to His House!",
+                        "Let Your Light Shine before all men!",
+                        "Be Still and Know that He is God!",
+                        "New Strength for a New Day! Welcome!",
                         "Greater is He that is in You!",
-                        "Nothing is Impossible with God!",
-                        "Rooted and Grounded in Love!",
+                        "With God, nothing shall be Impossible!",
+                        "Rooted in His Unfailing Love!",
                         "The Joy of the Lord is Your Strength!",
-                        "Blessed to be a Blessing!",
-                        "In Everything Give Thanks!",
-                        "Seek First the Kingdom!",
-                        "He Who Began a Good Work...",
-                        "Trust in the Lord with All Your Heart!",
-                        "His Love Endures Forever!",
-                        "Chosen, Holy, and Dearly Loved!"
+                        "Come and Drink from the Living Water!",
+                        "Enter His Gates with Thanksgiving!",
+                        "His Faithful Love Endures Forever!",
+                        "Welcome home to the Family of God!",
+                        "Trust Him with all Your Heart!",
+                        "His Grace is Sufficient for You!",
+                        "Blessed be the Name of the Lord!",
+                        "A New Song of Praise is in our Hearts!"
                     ];
                     const randGreeting = greetings[Math.floor(Math.random() * greetings.length)];
                     const cName = localStorage.getItem('setting_churchName') || '';
@@ -307,6 +313,7 @@ function App() {
                 if (unsubSongsUpdate) unsubSongsUpdate();
                 if (unsubAppRunning) unsubAppRunning();
                 if (unsubDbStatusUpdate) unsubDbStatusUpdate();
+                if (unsubRequestQuit) unsubRequestQuit();
             };
         }
     }, []);
@@ -1383,6 +1390,40 @@ function App() {
                                 >
                                     Delete Song
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Quit Confirmation Modal */}
+                {showQuitModal && (
+                    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[210] flex items-center justify-center p-4">
+                        <div className="bg-white rounded-[2.5rem] shadow-2xl p-8 max-w-md w-full animate-fade-in border border-slate-100 ring-1 ring-slate-200/50">
+                            <div className="flex flex-col items-center text-center">
+                                <div className="w-20 h-20 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center shadow-inner mb-6 animate-pulse">
+                                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                                </div>
+                                <h3 className="text-2xl font-bold text-slate-800 mb-2">Exit LyriX Stage?</h3>
+                                <p className="text-slate-500 leading-relaxed mb-8 px-4">Are you sure you want to close the application? Any active presentation or projection will be stopped immediately.</p>
+
+                                <div className="flex w-full gap-4">
+                                    <button
+                                        onClick={() => setShowQuitModal(false)}
+                                        className="flex-1 py-4 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-2xl text-base font-bold transition-all active:scale-95"
+                                    >
+                                        Stay Here
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            if (window.electron) {
+                                                window.electron.invoke('force-quit');
+                                            }
+                                        }}
+                                        className="flex-1 py-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-base font-bold shadow-xl shadow-red-500/30 transition-all active:scale-95 border-b-4 border-red-800"
+                                    >
+                                        Exit App
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
