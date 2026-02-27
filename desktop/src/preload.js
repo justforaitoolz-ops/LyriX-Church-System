@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('electron', {
     onUpdateProgress: exposeListener('update-progress'),
     onAppRunningAlert: exposeListener('app-running-alert'),
     onDbStatus: exposeListener('db-status-updated'),
+    onConfirmAppClose: exposeListener('confirm-app-close'),
     sendAction: (action, data) => ipcRenderer.send('action', { action, data }),
     invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
     deleteSong: (id) => ipcRenderer.invoke('delete-song', id),

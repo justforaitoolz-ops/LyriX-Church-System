@@ -46,20 +46,6 @@ if (!gotTheLock) {
 
         mainWindow.maximize();
 
-        let isQuitting = false;
-
-        mainWindow.on('close', (e) => {
-            if (!isQuitting) {
-                e.preventDefault();
-                mainWindow.webContents.send('request-quit');
-            }
-        });
-
-        ipcMain.handle('force-quit', () => {
-            isQuitting = true;
-            app.quit();
-        });
-
         if (process.env.NODE_ENV === 'development') {
             mainWindow.loadURL('http://localhost:5173');
         } else {
@@ -86,6 +72,13 @@ if (!gotTheLock) {
                         setCustomTitle();
                     });
                 }
+            }
+        });
+
+        mainWindow.on('close', (e) => {
+            if (!app.isQuitting) {
+                e.preventDefault();
+                mainWindow.webContents.send('confirm-app-close');
             }
         });
     }
@@ -192,6 +185,11 @@ if (!gotTheLock) {
 
         ipcMain.handle('install-update', () => {
             autoUpdater.quitAndInstall(true, true);
+        });
+
+        ipcMain.handle('exit-app', () => {
+            app.isQuitting = true;
+            app.quit();
         });
 
         ipcMain.handle('get-app-version', () => {
