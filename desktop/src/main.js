@@ -258,14 +258,21 @@ if (!gotTheLock) {
         });
 
         ipcMain.handle('refresh-ip', async () => {
-            const { getLocalIP } = require('./server/index.js');
-            const ip = getLocalIP();
-            currentServerStatus.ip = ip;
-            const updatedStatus = { ...currentServerStatus, ip: ip };
-            BrowserWindow.getAllWindows().forEach(win => {
-                win.webContents.send('status-update', updatedStatus);
-            });
-            return updatedStatus;
+            try {
+                const { getLocalIP } = require('./server/index.js');
+                const ip = getLocalIP();
+                currentServerStatus.ip = ip;
+                if (io) {
+                    const status = { ...currentServerStatus, connections: io.engine.clientsCount };
+                    BrowserWindow.getAllWindows().forEach(win => {
+                        if (!win.isDestroyed()) win.webContents.send('status-update', status);
+                    });
+                }
+                return currentServerStatus.ip;
+            } catch (e) {
+                console.error("Failed to refresh IP:", e);
+                return 'Unknown';
+            }
         });
 
         ipcMain.handle('search-lyrics', async (event, query) => {
@@ -548,172 +555,7 @@ if (!gotTheLock) {
             }
         });
 
-        ipcMain.handle('get-song', async (event, id) => {
-            return getSong(id);
-        });
 
-        ipcMain.handle('search-songs', async (event, queryStr, filter) => {
-            return searchSongs(queryStr, filter);
-        });
-
-        ipcMain.handle('delete-song', async (event, id) => {
-            return deleteSong(id);
-        });
-
-        ipcMain.handle('add-song', async (event, songData) => {
-            return addSong(songData);
-        });
-
-        ipcMain.handle('update-song', async (event, songData) => {
-            return updateSong(songData);
-        });
-
-        ipcMain.handle('get-next-id', async (event, category) => {
-            return getNextId(category);
-        });
-
-        ipcMain.handle('sync-songs', async () => {
-            return syncSongs();
-        });
-
-        ipcMain.handle('get-schedule', async () => {
-            return getSchedule();
-        });
-
-        ipcMain.handle('add-to-schedule', async (event, songId) => {
-            return addToSchedule(songId);
-        });
-
-        ipcMain.handle('remove-from-schedule', async (event, instanceId) => {
-            return removeFromSchedule(instanceId);
-        });
-
-        ipcMain.handle('reorder-schedule', async (event, newSchedule) => {
-            return reorderSchedule(newSchedule);
-        });
-
-        ipcMain.handle('open-projector-window', async () => {
-            if (projectorWindow && !projectorWindow.isDestroyed()) {
-                projectorWindow.show();
-                projectorWindow.focus();
-                return true;
-            } else {
-                const primaryDisplay = screen.getPrimaryDisplay();
-                const displays = screen.getAllDisplays();
-                const externalDisplay = displays.find((display) => {
-                    return display.bounds.x !== 0 || display.bounds.y !== 0;
-                });
-
-                projectorWindow = new BrowserWindow({
-                    x: externalDisplay ? externalDisplay.bounds.x : primaryDisplay.bounds.x + 100,
-                    y: externalDisplay ? externalDisplay.bounds.y : primaryDisplay.bounds.y + 100,
-                    width: 800,
-                    height: 600,
-                    fullscreen: !!externalDisplay,
-                    autoHideMenuBar: true,
-                    webPreferences: {
-                        preload: path.join(__dirname, 'preload.js'),
-                        contextIsolation: true,
-                        enableRemoteModule: false,
-                        nodeIntegration: false
-                    },
-                    icon: path.join(__dirname, '../public/icon.png'),
-                    title: 'LyriX Projector'
-                });
-
-                projectorWindow.loadFile(path.join(__dirname, '../public/projector.html'));
-
-                projectorWindow.on('closed', () => {
-                    projectorWindow = null;
-                    BrowserWindow.getAllWindows().forEach(win => {
-                        if (!win.isDestroyed()) win.webContents.send('projector-state-changed', false);
-                    });
-                });
-
-                return true;
-            }
-        });
-
-        ipcMain.handle('toggle-projector-window', async () => {
-            if (projectorWindow && !projectorWindow.isDestroyed()) {
-                projectorWindow.destroy();
-                projectorWindow = null;
-                return false;
-            } else {
-                const primaryDisplay = screen.getPrimaryDisplay();
-                const displays = screen.getAllDisplays();
-                const externalDisplay = displays.find((display) => {
-                    return display.bounds.x !== 0 || display.bounds.y !== 0;
-                });
-
-                projectorWindow = new BrowserWindow({
-                    x: externalDisplay ? externalDisplay.bounds.x : primaryDisplay.bounds.x + 100,
-                    y: externalDisplay ? externalDisplay.bounds.y : primaryDisplay.bounds.y + 100,
-                    width: 800,
-                    height: 600,
-                    fullscreen: !!externalDisplay,
-                    autoHideMenuBar: true,
-                    webPreferences: {
-                        preload: path.join(__dirname, 'preload.js'),
-                        contextIsolation: true,
-                        enableRemoteModule: false,
-                        nodeIntegration: false
-                    },
-                    icon: path.join(__dirname, '../public/icon.png'),
-                    title: 'LyriX Projector'
-                });
-
-                projectorWindow.loadFile(path.join(__dirname, '../public/projector.html'));
-
-                projectorWindow.on('closed', () => {
-                    projectorWindow = null;
-                    BrowserWindow.getAllWindows().forEach(win => {
-                        if (!win.isDestroyed()) win.webContents.send('projector-state-changed', false);
-                    });
-                });
-
-                return true;
-            }
-        });
-
-        ipcMain.handle('get-server-status', () => currentServerStatus);
-
-        ipcMain.handle('get-app-version', () => app.getVersion());
-
-        ipcMain.handle('get-db-status', () => getDbStatus());
-
-        ipcMain.handle('refresh-ip', async () => {
-            try {
-                const { getLocalIP } = require('./server/index.js');
-                currentServerStatus.ip = getLocalIP();
-                if (io) {
-                    const status = { ...currentServerStatus, connections: io.engine.clientsCount };
-                    BrowserWindow.getAllWindows().forEach(win => {
-                        if (!win.isDestroyed()) win.webContents.send('status-update', status);
-                    });
-                }
-                return currentServerStatus.ip;
-            } catch (e) {
-                console.error("Failed to refresh IP:", e);
-                return 'Unknown';
-            }
-        });
-
-        ipcMain.handle('app-control', (event, command) => {
-            if (command === 'quit') {
-                app.isQuitting = true;
-                app.quit();
-            } else if (command === 'minimize') {
-                mainWindow.minimize();
-            } else if (command === 'maximize') {
-                if (mainWindow.isMaximized()) mainWindow.unmaximize();
-                else mainWindow.maximize();
-            } else if (command === 'reload') {
-                mainWindow.reload();
-            } else if (command === 'open-devtools') {
-                mainWindow.webContents.openDevTools({ mode: 'detach' });
-            }
-        });
 
         let globalMaxDevices = 1;
 
