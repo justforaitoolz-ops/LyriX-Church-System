@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 const { initializeApp } = require("firebase/app");
 // For Node.js environment (Electron Main), we use standard firestore
 const { getFirestore } = require("firebase/firestore");
