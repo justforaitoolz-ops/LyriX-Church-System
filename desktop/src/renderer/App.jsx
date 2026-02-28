@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
 import QRCode from 'react-qr-code';
 
-// Helper to strip leading numbers (e.g. "1. Title" -> "Title")
-const cleanText = (text) => text ? text.replace(/^\d+\.?\s*/, '') : '';
+// Helper to normalize whitespace without destroying deliberate numbers.
+const cleanText = (text) => text ? text.trim() : '';
 
 function App() {
     const [status, setStatus] = useState('Disconnected');
@@ -82,9 +82,9 @@ function App() {
         return saved ? JSON.parse(saved) : [];
     });
 
-    const stateRef = useRef({ slides: [], index: 0, currentSong: null, isModalOpen: false, schedule: [] });
+    const stateRef = useRef({ slides: [], index: 0, currentSong: null, isModalOpen: false, schedule: [], isProjectorOpen: false });
 
-    useEffect(() => { stateRef.current = { slides, index: currentSlideIndex, currentSong, isModalOpen: showAddModal || !!songToDelete, schedule }; }, [slides, currentSlideIndex, currentSong, showAddModal, songToDelete, schedule]);
+    useEffect(() => { stateRef.current = { slides, index: currentSlideIndex, currentSong, isModalOpen: showAddModal || !!songToDelete, schedule, isProjectorOpen }; }, [slides, currentSlideIndex, currentSong, showAddModal, songToDelete, schedule, isProjectorOpen]);
 
     // Save settings to localStorage whenever they change
     useEffect(() => {
@@ -175,13 +175,21 @@ function App() {
                 if (cmd.action === 'next-slide') { if (index < slides.length - 1) setCurrentSlideIndex(index + 1); }
                 else if (cmd.action === 'prev-slide') { if (index > 0) setCurrentSlideIndex(index - 1); }
                 else if (cmd.action === 'blank-screen') { setIsBlack(prev => !prev); }
-                else if (cmd.action === 'set-song') { selectSong(cmd.song); }
+                else if (cmd.action === 'set-song') {
+                    selectSong(cmd.song);
+                    if (!stateRef.current.isProjectorOpen && window.electron) {
+                        window.electron.invoke('open-projector-window').then(isOpen => setIsProjectorOpen(isOpen));
+                    }
+                }
                 else if (cmd.action === 'next-song') {
                     const { schedule, currentSong } = stateRef.current;
                     if (schedule.length > 1) {
                         const currentIndex = schedule.findIndex(s => s.instanceId === (currentSong?.instanceId || currentSong?.id));
                         if (currentIndex < schedule.length - 1) {
                             selectSong(schedule[currentIndex + 1]);
+                            if (!stateRef.current.isProjectorOpen && window.electron) {
+                                window.electron.invoke('open-projector-window').then(isOpen => setIsProjectorOpen(isOpen));
+                            }
                         }
                     }
                 }
@@ -191,6 +199,9 @@ function App() {
                         const currentIndex = schedule.findIndex(s => s.instanceId === (currentSong?.instanceId || currentSong?.id));
                         if (currentIndex > 0) {
                             selectSong(schedule[currentIndex - 1]);
+                            if (!stateRef.current.isProjectorOpen && window.electron) {
+                                window.electron.invoke('open-projector-window').then(isOpen => setIsProjectorOpen(isOpen));
+                            }
                         }
                     }
                 }
@@ -335,10 +346,13 @@ function App() {
         }
     }, [fontSize, isBold, color, backgroundColor, backgroundImage, textAlign, fontFamily, maxRemoteDevices, churchName, churchPlace, connections]);
 
-    const fetchSchedule = async () => {
+    const fetchSchedule = async (isManual = false) => {
         if (window.electron) {
             const list = await window.electron.invoke('get-schedule');
             setSchedule(list);
+            if (isManual) {
+                setCustomAlert("Schedule Refreshed");
+            }
         }
     };
 
@@ -393,7 +407,7 @@ function App() {
                 let titleNode = xmlDoc.getElementsByTagName('title')[0] || xmlDoc.getElementsByTagNameNS('*', 'title')[0];
                 let rawTitle = titleNode ? titleNode.textContent : file.name.replace(/\.xml$/i, "");
                 // Use the same cleaning logic as the rest of the app
-                const title = cleanText(rawTitle.replace(/^[-_]+/, '').replace(/\s+/g, ' ').trim());
+                const title = cleanText(rawTitle.replace(/\s+/g, ' '));
 
                 // Get Verses
                 const verses = xmlDoc.querySelectorAll("song lyrics verse lines");
@@ -501,6 +515,11 @@ function App() {
         setSlides(rawSlides);
         setCurrentSlideIndex(0);
         setIsBlack(false);
+
+        // Wake up projector
+        if (window.electron) {
+            window.electron.invoke('open-projector-window').then(isOpen => setIsProjectorOpen(isOpen));
+        }
     };
 
     const executeDelete = async () => {
@@ -765,6 +784,18 @@ function App() {
                                             <div className={`w-2 h-2 rounded-full ${status === 'Running' ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`}></div>
                                             {status === 'Running' ? 'Active' : 'Offline'}
                                         </div>
+                                        <button
+                                            onClick={async () => {
+                                                if (window.electron && window.electron.invoke) {
+                                                    await window.electron.invoke('refresh-ip');
+                                                }
+                                            }}
+                                            className="mt-2 px-3 py-1 bg-white border border-slate-200 hover:border-indigo-400 hover:text-indigo-600 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 text-slate-500"
+                                            title="Refresh IP Address"
+                                        >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                            Refresh IP
+                                        </button>
                                         {status === 'Running' && (
                                             <div className="text-xs mt-2 font-medium flex items-center justify-center gap-2 text-slate-500">
                                                 <span>{connections} /</span>
@@ -1243,7 +1274,7 @@ function App() {
                                 schedule={schedule}
                                 onRemove={handleRemoveFromSchedule}
                                 onReorder={handleReorderSchedule}
-                                onRefresh={fetchSchedule}
+                                onRefresh={() => { fetchSchedule(); setCustomAlert("Schedule synced successfully."); }}
                                 onSelect={(song) => {
                                     selectSong(song);
                                     if (!isProjectorOpen) {
@@ -1281,7 +1312,7 @@ function App() {
                                 const lyrics = slides.join('\n\n');
                                 setAddSongInitialData({
                                     id: currentSong.id,
-                                    title: currentSong.preview || currentSong.title,
+                                    title: currentSong.title || currentSong.preview,
                                     category: currentSong.category,
                                     lyrics: lyrics,
                                     isEdit: true
@@ -1825,7 +1856,7 @@ function SundayServiceList({ schedule, onRemove, onReorder, onSelect, onRefresh,
                 </h2>
                 <div className="flex items-center gap-2">
                     <button
-                        onClick={() => onRefresh && onRefresh()}
+                        onClick={() => onRefresh && onRefresh(true)}
                         className="p-1.5 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
                         title="Refresh Schedule"
                     >
@@ -1943,36 +1974,33 @@ function AddSongModal({ onClose, onSave, initialData, defaultCategory, onConfirm
     }, [category, initialData, isEdit]);
 
     const handleSave = async () => {
-        if (!id || !lyrics) return;
+        const cleanedTitle = (title || '').trim();
+        if (!id || !lyrics || !cleanedTitle) {
+            setCustomAlert('Title and Lyrics are mandatory.');
+            setLoading(false);
+            return;
+        }
         setLoading(true);
 
-        const rawLines = lyrics.split('\n'); // Don't trim/filter yet, we need to respect double newlines
+        const rawLines = lyrics.split('\n');
         const slides = [];
         let currentSlide = [];
-
-        let buildingSlide = false;
-
-        // Smart split logic:
-        // Use double newlines (\n\n) as explicit slide separators.
-        // If no double newlines, use default 6-line buffer.
 
         const hasDoubleNewlines = lyrics.includes('\n\n');
 
         if (hasDoubleNewlines) {
-            // Split by double newline to get distinct slides
             const rawSlides = lyrics.split(/\n\s*\n/);
             rawSlides.forEach(slideText => {
                 const cleanedLines = slideText.split('\n')
                     .map(l => l.trim())
                     .filter(l => l)
-                    .map(l => l.replace(/^\d+\.?\s*/, '')); // Strip leading numbers
+                    .map(l => l.replace(/^\d+\.?\s*/, ''));
 
                 if (cleanedLines.length > 0) {
                     slides.push(cleanedLines.join('\n'));
                 }
             });
         } else {
-            // Fallback to line-count splitting
             const lines = lyrics.split('\n').map(l => l.trim()).filter(l => l);
             lines.forEach((line, i) => {
                 const cleanLine = line.replace(/^\d+\.?\s*/, '');
@@ -1989,40 +2017,31 @@ function AddSongModal({ onClose, onSave, initialData, defaultCategory, onConfirm
         const songData = {
             id,
             category,
-            title: cleanText(title || 'Unknown Song'),
+            title: cleanedTitle,
             slides
         };
 
-        // If not explicit title, infer from first slide
-        if (!title && slides.length > 0) {
-            songData.title = cleanText(slides[0].split('\n')[0]);
-        }
-
-        const resolvedTitle = songData.title;
-
         try {
             if (window.electron) {
-                // Duplicate check for New Songs (and Title changes in Edit)
+                // Duplicate check
                 const existingSongs = await window.electron.invoke('search-songs', '', 'All');
                 const sanitizeTitle = t => (t || "").replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
                 const duplicateSong = existingSongs.find(s =>
                     s.id !== id &&
                     s.title &&
-                    sanitizeTitle(s.title) === sanitizeTitle(resolvedTitle)
+                    sanitizeTitle(s.title) === sanitizeTitle(cleanedTitle)
                 );
 
                 if (duplicateSong) {
-                    const shouldOverwrite = await onConfirmOverwrite(resolvedTitle);
+                    const shouldOverwrite = await onConfirmOverwrite(cleanedTitle);
                     if (!shouldOverwrite) {
                         setLoading(false);
-                        return; // Abort save
+                        return;
                     }
-                    // If overwrite, we actually update the duplicate song's ID's slides
                     songData.id = duplicateSong.id;
-                    songData.category = duplicateSong.category; // Keep original category
+                    songData.category = duplicateSong.category;
                     await window.electron.invoke('update-song', songData);
                 } else {
-                    // Normal behavior
                     if (isEdit) {
                         await window.electron.invoke('update-song', songData);
                     } else {
@@ -2030,6 +2049,9 @@ function AddSongModal({ onClose, onSave, initialData, defaultCategory, onConfirm
                     }
                 }
 
+                // Important: we need to ensure local state in App.jsx reflects the update
+                // Usually onSave(songData) updates it, but if IDs shifted it might be complex.
+                // For now, onSave is enough if the DB broadcast works.
                 onSave(songData);
                 onClose();
             }
@@ -2081,11 +2103,11 @@ function AddSongModal({ onClose, onSave, initialData, defaultCategory, onConfirm
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Title (Optional)</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Title <span className="text-red-500">*</span></label>
                         <input
                             type="text"
                             className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm italic"
-                            placeholder="Auto-detected from first line if empty"
+                            placeholder="Song Title"
                             value={title}
                             onChange={e => setTitle(e.target.value)}
                         />
@@ -2147,7 +2169,7 @@ function AddSongModal({ onClose, onSave, initialData, defaultCategory, onConfirm
                     <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-800">Cancel</button>
                     <button
                         onClick={handleSave}
-                        disabled={loading || !id || !lyrics}
+                        disabled={loading || !id || !lyrics || !title.trim()}
                         className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50 disabled:shadow-none"
                     >
                         {loading ? 'Saving...' : (isEdit ? 'Save Song' : 'Add Song')}

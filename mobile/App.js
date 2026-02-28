@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Alert, SafeAreaView, FlatList, KeyboardAvoidingView, Platform, Image, Keyboard, Animated } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Alert, SafeAreaView, FlatList, KeyboardAvoidingView, Platform, Image, Keyboard, Animated, BackHandler } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db, auth } from './firebaseConfig';
@@ -20,6 +20,58 @@ export default function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [tempName, setTempName] = useState('');
   const [currentGreeting, setCurrentGreeting] = useState('Praise the Lord!');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [customAlert, setCustomAlert] = useState(null);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [appVersion, setAppVersion] = useState('1.0.1');
+
+  // Multi-purpose Animated value for sidebar glow pulse
+  const glowPulse = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(glowPulse, { toValue: 1.3, duration: 1500, useNativeDriver: true }),
+          Animated.timing(glowPulse, { toValue: 1, duration: 1500, useNativeDriver: true }),
+        ])
+      ).start();
+    } else {
+      glowPulse.setValue(1);
+    }
+  }, [isSidebarOpen]);
+
+  const handleManualSync = async () => {
+    if (isSidebarOpen) toggleSidebar(); // Proper close animation
+    setIsSyncing(true);
+    try {
+      // Logic to trigger re-fetch of schedule and songs
+      const scheduleRef = doc(db, "schedules", "sunday-service");
+      const docSnap = await getDoc(scheduleRef);
+      if (docSnap.exists()) setSchedule(docSnap.data().items || []);
+
+      const q = query(collection(db, "songs"));
+      const querySnapshot = await getDocs(q);
+      const songs = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        // Recalculate previews if needed
+        songs.push({ ...data, displayTitle: data.title || (data.slides ? data.slides[0].split('\n')[0].replace(/^\d+[\.\s]*/, '').trim() : 'Unknown') });
+      });
+      setAllSongs(songs);
+
+      setCustomAlert("Sync Successful! Data is up to date.");
+    } catch (e) {
+      setCustomAlert("Sync failed. Check your connection.");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  // Sidebar animation
+  const sidebarAnim = useRef(new Animated.Value(-300)).current;
+
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -42,12 +94,41 @@ export default function App() {
 
   // Christian Greetings List
   const greetings = [
-    "Praise the Lord!",
-    "Shalom!",
-    "Grace and Peace!",
-    "God Bless You!",
-    "Blessings!",
-    "Joy in the Lord!"
+    "Praise the Lord! Welcome Home.",
+    "Grace and Peace to you in His Name.",
+    "Welcome! May His presence be with you.",
+    "Blessings! Rejoice in the Lord always.",
+    "He is Good! Welcome to His sanctuary.",
+    "Jesus is Lord! Walk in His light today.",
+    "Be encouraged! Faith over fear.",
+    "Abundant Grace is yours today.",
+    "Praise Him! Let your breath be praise.",
+    "The Lord is your Shepherd! Rest in Him.",
+    "Victory is yours in Jesus Name!",
+    "Peace be with you as you worship.",
+    "Walking in the Spirit, full of joy!",
+    "Hallelujah! Praise be to our King.",
+    "His mercies are new for you this morning.",
+    "Transformed by Grace, called by Name.",
+    "Christ in you, the hope of glory!",
+    "Worship Him in Spirit and Truth today.",
+    "He is Risen! New life belongs to you.",
+    "Let your light shine for His glory.",
+    "Be still and know that He is God.",
+    "Strength for today, hope for tomorrow.",
+    "Greater is He that is in you!",
+    "Nothing is impossible with our God!",
+    "Rooted and grounded in His perfect love.",
+    "The joy of the Lord is your strength!",
+    "Blessed to be a blessing to others.",
+    "In everything give thanks and rejoice!",
+    "Seek Him first, and all will be well.",
+    "He who began a good work in you...",
+    "Trust in the Lord with all your heart!",
+    "His love endurance forever and ever!",
+    "You are chosen, holy, and dearly loved!",
+    "Come as you are, His arms are open.",
+    "Stay encouraged! He is working for you."
   ];
 
   // Random Bible Verses for Worship
@@ -240,8 +321,48 @@ export default function App() {
     initApp();
   }, []);
 
+  // Android Back Handler for Exit Confirmation
+  useEffect(() => {
+    const backAction = () => {
+      if (isSidebarOpen) {
+        toggleSidebar();
+        return true;
+      }
+      BackHandler.exitApp();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [isSidebarOpen]);
+
+  // Sidebar Toggle logic
+  const toggleSidebar = () => {
+    Keyboard.dismiss();
+    const toValue = isSidebarOpen ? -310 : 0;
+    Animated.timing(sidebarAnim, {
+      toValue,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleUpdateNameInSidebar = async (newName) => {
+    setUserName(newName);
+    try {
+      await AsyncStorage.setItem('user_name', newName.trim());
+    } catch (e) {
+      console.log("Error saving name:", e);
+    }
+  };
+
+
   const buildNumber = Constants.expoConfig.extra.buildNumber || '0';
-  const appVersion = Constants.expoConfig.version || '1.0.0';
 
   const renderFooter = () => (
     <View style={styles.footer}>
@@ -292,7 +413,7 @@ export default function App() {
 
   const handleOnboardingSubmit = async () => {
     if (!tempName.trim()) {
-      Alert.alert("Welcome", "Please enter your name to continue");
+      setCustomAlert("Please enter your name to continue");
       return;
     }
     try {
@@ -312,7 +433,7 @@ export default function App() {
         useNativeDriver: true,
       }).start();
     } catch (e) {
-      Alert.alert("Error", "Could not save your name");
+      setCustomAlert("Could not save your name");
     }
   };
 
@@ -333,47 +454,39 @@ export default function App() {
   // Tab Handlers
   // Fetch is auto via listener
 
-  // Fetch All Songs for Client-Side Search
+  // Fetch All Songs for Client-Side Search (Real-time)
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const fetchSongs = async () => {
-      try {
-        const q = query(collection(db, "songs"));
-        const querySnapshot = await getDocs(q);
-        const songs = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          let rawPreview = data.slides ? data.slides[0].split('\n')[0] : '';
+    const q = query(collection(db, "songs"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const songs = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        let rawPreview = data.slides ? data.slides[0].split('\n')[0] : '';
+        let cleanedPreview = rawPreview.trim();
 
-          // Clean preview: Remove leading numbers/dots and Title redundancy
-          let cleanedPreview = rawPreview
-            .replace(/^\d+[\.\s]*/, '') // Remove leading numbers like "1. " or "1 "
-            .trim();
+        if (data.title && cleanedPreview.toLowerCase().startsWith(data.title.toLowerCase())) {
+          cleanedPreview = cleanedPreview.substring(data.title.length).replace(/^[\s,.-]+/, '').trim();
+        }
 
-          // Remove title if it's identical to the start of lyrics
-          if (data.title && cleanedPreview.toLowerCase().startsWith(data.title.toLowerCase())) {
-            cleanedPreview = cleanedPreview.substring(data.title.length).replace(/^[\s,.-]+/, '').trim();
-          }
+        if (cleanedPreview.length > 80) {
+          cleanedPreview = cleanedPreview.substring(0, 77) + '...';
+        }
 
-          // Truncate if still too long (especially for Telugu/complex scripts)
-          if (cleanedPreview.length > 80) {
-            cleanedPreview = cleanedPreview.substring(0, 77) + '...';
-          }
-
-          songs.push({
-            ...data,
-            displayTitle: data.title || cleanedPreview,
-            displayPreview: cleanedPreview
-          });
+        songs.push({
+          ...data,
+          displayTitle: data.title || cleanedPreview,
+          displayPreview: cleanedPreview
         });
-        setAllSongs(songs);
-        console.log(`Loaded ${songs.length} songs for offline search`);
-      } catch (e) {
-        console.error("Error loading songs:", e);
-      }
-    };
-    fetchSongs();
+      });
+      setAllSongs(songs);
+      console.log(`Updated Songs Cache: ${songs.length} songs`);
+    }, (error) => {
+      console.error("Error watching songs:", error);
+    });
+
+    return () => unsubscribe();
   }, [isAuthenticated]);
 
   const handleSearch = () => {
@@ -382,31 +495,82 @@ export default function App() {
       return;
     }
 
-    const q = searchQuery.toLowerCase().trim();
-    const isNumeric = /^\d+$/.test(q);
+    const normalizeSearchText = (text) => {
+      if (!text) return "";
+      return text.toString()
+        .toLowerCase()
+        .replace(/[^\w\s]/gi, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    };
+
+    const qNormalized = normalizeSearchText(searchQuery);
+    const queryTokens = qNormalized.split(' ').filter(t => t.length > 0);
     Keyboard.dismiss();
 
-    const results = allSongs.filter(song => {
-      const textToSearch = [
-        song.title || '',
-        song.id ? song.id.toString() : '',
-        song.displayPreview || ''
-      ].join(' ').toLowerCase();
+    if (queryTokens.length === 0) {
+      setSearchResults([]);
+      return;
+    }
 
-      return textToSearch.includes(q);
+    // Step 1: Filter and Score
+    const scoredResults = allSongs.map(song => {
+      const titleNormalized = normalizeSearchText(song.title || "");
+      const idNormalized = normalizeSearchText(song.id || "");
+
+      const isExactTitle = titleNormalized === qNormalized;
+      const startsWithTitle = titleNormalized.startsWith(qNormalized);
+      const exactPhraseInTitle = titleNormalized.includes(qNormalized);
+      const isExactId = idNormalized === qNormalized;
+
+      let score = 0;
+
+      if (isExactId) score += 200;
+      else if (isExactTitle) score += 100;
+      else if (startsWithTitle) score += 80;
+      else if (exactPhraseInTitle) score += 60;
+
+      if (score === 0) {
+        const matchTitleTokens = queryTokens.every(token => titleNormalized.includes(token));
+        if (matchTitleTokens) score += 40;
+      }
+
+      const lyricsContent = (song.slides || []).join(' ');
+      const lyricsNormalized = normalizeSearchText(lyricsContent);
+      const categoryNormalized = normalizeSearchText(song.category || "");
+
+      const exactPhraseInLyrics = lyricsNormalized.includes(qNormalized);
+      if (exactPhraseInLyrics) score += 20;
+
+      const matchCategoryTokens = queryTokens.every(token => categoryNormalized.includes(token));
+      if (matchCategoryTokens) score += 10;
+
+      if (score === 0) {
+        const matchLyricsTokens = queryTokens.every(token => lyricsNormalized.includes(token));
+        if (matchLyricsTokens) score += 5;
+      }
+
+      return { song, score };
     });
 
-    // Natural Sort
-    results.sort((a, b) => {
-      return a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: 'base' });
-    });
+    // Step 2: Filter and Sort
+    const results = scoredResults
+      .filter(res => res.score > 0)
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        // Tie-breaker: Alphabetical sorting by title, then ID
+        const titleCompare = (a.song.title || '').localeCompare(b.song.title || '');
+        if (titleCompare !== 0) return titleCompare;
+        return (a.song.id || '').toString().localeCompare((b.song.id || '').toString(), undefined, { numeric: true, sensitivity: 'base' });
+      })
+      .map(res => res.song);
 
     setSearchResults(results.slice(0, 50));
   };
 
   const handleEdit = (song) => {
     setNewId(song.id || '');
-    setNewTitle(song.title || '');
+    setNewTitle(song.title || song.displayTitle || '');
     setNewCategory(song.category || 'English Choruses');
     setNewLyrics(song.slides ? song.slides.join('\n\n') : '');
     setIsEditing(true);
@@ -417,7 +581,7 @@ export default function App() {
     try {
       // Prevent duplicates
       if (schedule.some(item => item.songId === songId)) {
-        Alert.alert("Already Added", "This song is already in the schedule.");
+        setCustomAlert("This song is already in the schedule.");
         return;
       }
 
@@ -425,14 +589,14 @@ export default function App() {
       const song = allSongs.find(s => s.id === songId);
 
       if (!song) {
-        Alert.alert("Error", "Song not found in cache");
+        setCustomAlert("Song not found in cache");
         return;
       }
 
       // Ensure we only store the TITLE (first line), not full lyrics
       const rawTitle = song.displayTitle || song.title || "Unknown";
-      // Optional: Strip leading numbers if present (e.g. "1. Amazing Grace" -> "Amazing Grace")
-      const cleanTitle = rawTitle.replace(/^\d+\.?\s*/, '').trim();
+      // Optional: Strip leading numbers if present (Disabled to persist titles)
+      const cleanTitle = rawTitle.trim();
 
       const newItem = {
         instanceId: Date.now().toString(),
@@ -449,7 +613,7 @@ export default function App() {
       await setDoc(doc(db, "schedules", "sunday-service"), { items: newSchedule });
       // Removed blocking Alert for speed
     } catch (e) {
-      Alert.alert("Error", "Could not add to schedule: " + e.message);
+      setCustomAlert("Could not add to schedule: " + e.message);
     }
   }
 
@@ -517,12 +681,14 @@ export default function App() {
       }
       setNewId(nextId);
       setNewCategory('Special Songs');
-      Alert.alert("ID Generated", `Next ID is ${nextId}`);
+      setCustomAlert(`Next sequence ID is ${nextId}`);
     };
 
     const saveSong = async () => {
+      setIsSyncing(true);
       if (!newTitle || !newId || !newLyrics) {
-        Alert.alert("Error", "Please fill Title, ID, and Lyrics");
+        setCustomAlert("Please fill Title, ID, and Lyrics");
+        setIsSyncing(false);
         return;
       }
       try {
@@ -531,7 +697,8 @@ export default function App() {
         if (!isEditing) {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            Alert.alert("Error", "Song ID already exists!");
+            setCustomAlert("Song ID already exists!");
+            setIsSyncing(false);
             return;
           }
         }
@@ -546,67 +713,67 @@ export default function App() {
           searchKey: newTitle.toLowerCase()
         });
 
-        Alert.alert("Success", isEditing ? "Song Updated!" : "Song Saved!");
+        // Optimization: Update local state instead of full re-fetch
+        setAllSongs(prev => {
+          const updated = isEditing
+            ? prev.map(s => s.id === newId.trim() ? { id: newId.trim(), title: newTitle.trim(), category: newCategory, slides: slides } : s)
+            : [...prev, { id: newId.trim(), title: newTitle.trim(), category: newCategory, slides: slides }];
+          return updated.map(s => ({ ...s, displayTitle: s.title || (s.slides ? s.slides[0].split('\n')[0].trim() : 'Unknown') }));
+        });
+
         setNewTitle(''); setNewId(''); setNewLyrics('');
         setIsEditing(false);
-
-        // Refresh song list
-        const q = query(collection(db, "songs"));
-        const querySnapshot = await getDocs(q);
-        const songs = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const firstLine = data.slides ? data.slides[0].split('\n')[0].replace(/^\d+[\.\s]*/, '').trim() : '';
-          songs.push({
-            ...data,
-            displayTitle: data.title || firstLine,
-            displayPreview: firstLine
-          });
-        });
-        setAllSongs(songs);
+        setCustomAlert(isEditing ? "Song Updated!" : "Song Saved!");
       } catch (e) {
-        Alert.alert("Error", e.message);
+        setCustomAlert("Error: " + e.message);
+      } finally {
+        setIsSyncing(false);
       }
     };
 
     return (
-      <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 150 }} keyboardShouldPersistTaps="handled">
-        {renderLogo()}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <Text style={[styles.heading, { marginBottom: 0 }]}>{isEditing ? "Edit Song" : "Add New Song"}</Text>
-          {isEditing && (
-            <TouchableOpacity onPress={() => { setIsEditing(false); setNewTitle(''); setNewId(''); setNewLyrics(''); setActiveTab('search'); }}>
-              <Text style={{ color: '#ef4444', fontWeight: 'bold' }}>Cancel</Text>
+      <View style={{ flex: 1 }}>
+        <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 150 }} keyboardShouldPersistTaps="handled">
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('./assets/branding_logo.png')}
+              style={styles.logo}
+            />
+          </View>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 10 }}>
+            <Text style={styles.label}>Song ID</Text>
+            <TouchableOpacity onPress={() => { setIsEditing(false); setNewTitle(''); setNewId(''); setNewLyrics(''); setActiveTab('schedule'); }}>
+              <Text style={{ color: '#6366f1', fontWeight: 'bold', fontSize: 16 }}>Cancel</Text>
             </TouchableOpacity>
-          )}
-        </View>
+          </View>
 
-        <Text style={styles.label}>Song ID</Text>
-        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 20 }}>
-          <TextInput style={[styles.input, { flex: 1, marginBottom: 0 }]} value={newId} onChangeText={setNewId} placeholder="e.g. S100" placeholderTextColor="#666" />
-          <TouchableOpacity style={styles.secondaryButton} onPress={generateId}>
-            <Text style={styles.secondaryButtonText}>🔄 Auto-ID</Text>
+          <View style={{ flexDirection: 'row', gap: 10, marginBottom: 20 }}>
+            <TextInput style={[styles.input, { flex: 1, marginBottom: 0 }]} value={newId} onChangeText={setNewId} placeholder="e.g. S100" placeholderTextColor="#666" />
+            <TouchableOpacity style={styles.secondaryButton} onPress={generateId}>
+              <Text style={styles.secondaryButtonText}>🔄 Auto-ID</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.label}>Title</Text>
+          <TextInput style={styles.input} value={newTitle} onChangeText={setNewTitle} placeholder="Song Title" placeholderTextColor="#666" />
+
+          <Text style={styles.label}>Lyrics (Double spacing = New Slide)</Text>
+          <TextInput
+            style={[styles.input, { height: 150, textAlignVertical: 'top' }]}
+            value={newLyrics}
+            onChangeText={setNewLyrics}
+            multiline={true}
+            placeholder="Verse 1...&#10;&#10;Chorus..."
+            placeholderTextColor="#666"
+          />
+
+          <Text style={styles.debugText}>Database: {allSongs.length} songs loaded</Text>
+          <TouchableOpacity style={styles.primaryButton} onPress={saveSong} disabled={isSyncing}>
+            <Text style={styles.primaryButtonText}>{isEditing ? "Update Song" : "Store Song"}</Text>
           </TouchableOpacity>
-        </View>
-
-        <Text style={styles.label}>Title</Text>
-        <TextInput style={styles.input} value={newTitle} onChangeText={setNewTitle} placeholder="Song Title" placeholderTextColor="#666" />
-
-        <Text style={styles.label}>Lyrics (Double spacing = New Slide)</Text>
-        <TextInput
-          style={[styles.input, { height: 150, textAlignVertical: 'top' }]}
-          value={newLyrics}
-          onChangeText={setNewLyrics}
-          multiline={true}
-          placeholder="Verse 1...&#10;&#10;Chorus..."
-          placeholderTextColor="#666"
-        />
-
-        <Text style={styles.debugText}>Database: {allSongs.length} songs loaded</Text>
-        <TouchableOpacity style={styles.primaryButton} onPress={saveSong}>
-          <Text style={styles.primaryButtonText}>{isEditing ? "Update Song" : "Save Song"}</Text>
-        </TouchableOpacity>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   };
 
@@ -642,6 +809,66 @@ export default function App() {
     </View>
   );
 
+  const renderSidebar = () => (
+    <>
+      {isSidebarOpen && (
+        <TouchableOpacity
+          style={styles.sidebarOverlay}
+          activeOpacity={1}
+          onPress={toggleSidebar}
+        />
+      )}
+      <Animated.View style={[styles.sidebar, { transform: [{ translateX: sidebarAnim }] }]}>
+        <View style={styles.sidebarHeader}>
+          <View style={styles.sidebarLogoGlowContainer}>
+            <Animated.View style={[styles.logoGlow, { transform: [{ scale: glowPulse }] }]} />
+            <Image source={require('./assets/branding_logo.png')} style={styles.sidebarLogo} />
+          </View>
+          <Text style={styles.sidebarTitleItalic}>LyriX Mobile</Text>
+        </View>
+
+        <View style={styles.sidebarContent}>
+          <Text style={styles.sidebarLabel}>Your Name</Text>
+          <TextInput
+            style={[styles.sidebarInput, { fontStyle: 'italic' }]}
+            value={userName}
+            onChangeText={handleUpdateNameInSidebar}
+            placeholder="Friend"
+            placeholderTextColor="#666"
+          />
+
+          <View style={styles.sidebarStatusContainer}>
+            <Text style={styles.sidebarLabel}>Sync Status</Text>
+            <View style={styles.statusRow}>
+              <View style={[styles.statusIndicator, { backgroundColor: isAuthenticated ? (isSyncing ? '#f59e0b' : '#10b981') : '#ef4444' }]} />
+              <Text style={[styles.statusText, { fontStyle: 'italic' }]}>
+                {isAuthenticated ? (isSyncing ? "Syncing..." : "Connected & Live") : "Offline"}
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.sidebarSyncBtn} onPress={handleManualSync} disabled={isSyncing}>
+              <Ionicons name="refresh-circle" size={20} color="#818cf8" />
+              <Text style={styles.sidebarSyncText}>Manual Sync</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.sidebarFooter}>
+          <Text style={styles.sidebarFooterText}>© ChurchLyriXApp | v{appVersion}</Text>
+          <Text style={styles.sidebarFooterText}>Build {buildNumber}</Text>
+        </View>
+      </Animated.View>
+    </>
+  );
+
+  const renderHamburger = () => {
+    if (isSidebarOpen) return null;
+    return (
+      <TouchableOpacity style={styles.hamburgerButton} onPress={toggleSidebar}>
+        <Ionicons name="menu" size={32} color="white" />
+      </TouchableOpacity>
+    );
+  };
+
   const renderSchedule = () => (
     <View style={styles.content}>
       {renderLogo()}
@@ -649,7 +876,25 @@ export default function App() {
         <Text style={styles.verseText}>{currentVerse.text}</Text>
         <Text style={styles.verseRef}>{currentVerse.ref}</Text>
       </Animated.View>
-      <Text style={styles.heading}>Sunday Schedule ({schedule.length})</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.heading}>Sunday Schedule</Text>
+        <View style={styles.headerActions}>
+          <View style={styles.countBadge}>
+            <Text style={styles.countBadgeText}>{schedule.length}</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.headerSyncButton}
+            onPress={handleManualSync}
+            disabled={isSyncing}
+          >
+            <Ionicons
+              name={isSyncing ? "reload-circle" : "sync"}
+              size={24}
+              color="#6366f1"
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       <FlatList
         data={schedule}
         keyExtractor={(item) => item.instanceId}
@@ -699,7 +944,7 @@ export default function App() {
           <View style={styles.listItem}>
             <View style={{ flex: 1 }}>
               <Text style={styles.itemTitle} numberOfLines={1}>{item.displayTitle}</Text>
-              <Text style={styles.itemSubtitle}>{item.category} • {item.id}</Text>
+              <Text style={[styles.itemSubtitle, { fontStyle: 'italic' }]}>{item.category} • {item.id}</Text>
             </View>
             <View style={{ gap: 8 }}>
               <TouchableOpacity style={styles.addButton} onPress={() => addToSchedule(item.id)}>
@@ -728,7 +973,6 @@ export default function App() {
             opacity: fadeAnim,
             transform: [{ scale: scaleAnim }],
             alignItems: 'center',
-            position: 'absolute'
           }}>
             <Image source={require('./assets/branding_logo.png')} style={styles.splashLogo} />
             <Text style={styles.splashBranding}>LYRIX</Text>
@@ -739,7 +983,9 @@ export default function App() {
             opacity: welcomeFadeAnim,
             transform: [{ scale: welcomeScaleAnim }],
             alignItems: 'center',
-            position: 'absolute'
+            position: 'absolute',
+            width: '100%',
+            paddingHorizontal: 20
           }}>
             <Text style={styles.welcomeTitle}>{currentGreeting}</Text>
             <Text style={styles.welcomeName}>{userName}</Text>
@@ -764,12 +1010,56 @@ export default function App() {
         </View>
       ) : (
         <>
+          {isAuthenticated && renderHamburger()}
           <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
             {activeTab === 'schedule' && renderSchedule()}
             {activeTab === 'add' && renderAddSong()}
             {activeTab === 'search' && renderSearch()}
           </KeyboardAvoidingView>
           {!isKeyboardVisible && BottomTabs}
+          <View style={{ height: Platform.OS === 'android' ? 25 : 0 }} />
+          {isAuthenticated && renderSidebar()}
+
+          {/* Custom Alert Modal */}
+          {customAlert && (
+            <View style={[styles.modalOverlay, { zIndex: 3000 }]}>
+              <View style={styles.customAlertContainer}>
+                <View style={styles.alertIconBg}>
+                  <Ionicons name="notifications" size={32} color="#6366f1" />
+                </View>
+                <Text style={styles.alertText}>{customAlert}</Text>
+                <TouchableOpacity style={styles.alertButton} onPress={() => setCustomAlert(null)}>
+                  <Text style={styles.alertButtonText}>Got it</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          {/* Exit Confirmation Modal */}
+          {showExitConfirm && (
+            <View style={styles.modalOverlay}>
+              <View style={styles.customAlertContainer}>
+                <View style={[styles.alertIconBg, { backgroundColor: '#fee2e2' }]}>
+                  <Ionicons name="exit" size={32} color="#f87171" />
+                </View>
+                <Text style={styles.alertText}>Wait a moment! Are you sure you want to close the application?</Text>
+                <View style={{ flexDirection: 'row', gap: 12, marginTop: 10 }}>
+                  <TouchableOpacity style={[styles.alertButton, { backgroundColor: '#374151', flex: 1 }]} onPress={() => setShowExitConfirm(false)}>
+                    <Text style={styles.alertButtonText}>Stay</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.alertButton, { backgroundColor: '#f87171', flex: 1 }]}
+                    onPress={() => {
+                      setShowExitConfirm(false);
+                      setTimeout(() => BackHandler.exitApp(), 100);
+                    }}
+                  >
+                    <Text style={styles.alertButtonText}>Exit</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          )}
         </>
       )}
     </SafeAreaView>
@@ -836,8 +1126,23 @@ const styles = StyleSheet.create({
   // New Branding & Onboarding Styles
   splashContainer: { flex: 1, backgroundColor: '#111827', justifyContent: 'center', alignItems: 'center' },
   splashLogo: { width: 120, height: 120, resizeMode: 'contain', marginBottom: 20 },
-  splashBranding: { color: 'white', fontSize: 32, fontWeight: '900', letterSpacing: 8, marginBottom: 10 },
-  splashSlogan: { color: '#6366f1', fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 2 },
+  splashBranding: { color: 'white', fontSize: 32, fontWeight: '900', letterSpacing: 8, marginBottom: 10, textAlign: 'center' },
+  splashSlogan: { color: '#6366f1', fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center' },
+
+  logoGlow: {
+    position: 'absolute',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#6366f1',
+    opacity: 0.15,
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 15,
+    elevation: 8,
+    zIndex: 1
+  },
 
   onboardingContainer: { flex: 1, backgroundColor: '#111827', padding: 30, justifyContent: 'center' },
   onboardingLogo: { width: 80, height: 80, resizeMode: 'contain', marginBottom: 24, alignSelf: 'center' },
@@ -876,6 +1181,35 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     lineHeight: 20
   },
+  userNameField: {
+    color: 'white',
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 4,
+    fontStyle: 'italic'
+  },
+  statusText: {
+    color: '#9ca3af',
+    fontSize: 14,
+    fontWeight: '500',
+    fontStyle: 'italic'
+  },
+  sidebarSyncBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+    gap: 6
+  },
+  sidebarSyncText: {
+    color: '#818cf8',
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontStyle: 'italic'
+  },
   verseRef: {
     color: '#6366f1',
     fontSize: 12,
@@ -888,18 +1222,21 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 4,
     textTransform: 'uppercase',
-    marginBottom: 10
+    marginBottom: 10,
+    textAlign: 'center'
   },
   welcomeName: {
     color: 'white',
     fontSize: 36,
     fontWeight: '900',
-    fontStyle: 'italic'
+    fontStyle: 'italic',
+    textAlign: 'center'
   },
 
-  logoContainer: { alignItems: 'center', marginBottom: 30, paddingTop: 10 },
-  logo: { width: 80, height: 80, resizeMode: 'contain', marginBottom: 10 },
+  logoContainer: { alignItems: 'center', marginBottom: 20, paddingTop: 40 },
+  logo: { width: 80, height: 80, resizeMode: 'contain', marginBottom: 12 },
   brandingText: { color: 'white', fontSize: 20, fontWeight: '900', letterSpacing: 2 },
+  brandingTextItalic: { color: 'white', fontSize: 20, fontWeight: '900', letterSpacing: 2, fontStyle: 'italic' },
 
   headerLogoContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, paddingTop: 10 },
   headerLogo: { width: 32, height: 32, resizeMode: 'contain' },
@@ -915,7 +1252,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#1f2937',
     borderRadius: 30,
-    height: 70,
+    height: 60, // Slightly more compact
     width: '100%',
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
@@ -1012,5 +1349,212 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '600',
     letterSpacing: 0.5
-  }
+  },
+
+  // Sidebar Styles
+  sidebar: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 300,
+    backgroundColor: '#1f2937',
+    zIndex: 1000,
+    padding: 24,
+    borderRightWidth: 1,
+    borderRightColor: '#374151',
+    shadowColor: "#000",
+    shadowOffset: { width: 10, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 20,
+  },
+  sidebarOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    zIndex: 999,
+  },
+  hamburgerButton: {
+    position: 'absolute',
+    top: Platform.OS === 'android' ? 60 : 20, // Adjusted for safe area
+    left: 20,
+    zIndex: 10000, // Higher Z-index
+    padding: 12,
+    backgroundColor: 'rgba(31, 41, 55, 0.9)', // Slightly more opaque
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8
+  },
+  sidebarHeader: {
+    alignItems: 'center',
+    marginBottom: 30,
+    paddingTop: 50, // Move logo down in sidebar
+  },
+  sidebarLogo: {
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
+    zIndex: 2,
+  },
+  sidebarLogoGlowContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+    width: 90,
+    height: 90
+  },
+  sidebarTitle: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: '900',
+    letterSpacing: 4,
+  },
+  sidebarTitleItalic: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: '900',
+    letterSpacing: 4,
+    fontStyle: 'italic'
+  },
+  sidebarContent: {
+    flex: 1,
+  },
+  sidebarLabel: {
+    color: '#9ca3af',
+    fontSize: 12,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  sidebarInput: {
+    backgroundColor: '#111827',
+    color: 'white',
+    padding: 16,
+    borderRadius: 12,
+    fontSize: 16,
+    fontWeight: '700',
+    borderWidth: 1,
+    borderColor: '#374151',
+    marginBottom: 32,
+  },
+  sidebarStatusContainer: {
+    marginTop: 10,
+  },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#111827',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#374151',
+  },
+  statusIndicator: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  statusText: {
+    color: '#e5e7eb',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  sidebarFooter: {
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#374151',
+    alignItems: 'center',
+  },
+  sidebarFooterText: {
+    color: '#6b7280',
+    fontSize: 11,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+
+  // Custom Modal Styles
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(17, 24, 39, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2000,
+    padding: 24,
+  },
+  customAlertContainer: {
+    backgroundColor: 'white',
+    borderRadius: 32,
+    padding: 32,
+    width: '100%',
+    maxWidth: 340,
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 20 },
+    shadowOpacity: 0.4,
+    shadowRadius: 30,
+    elevation: 20,
+  },
+  alertIconBg: {
+    width: 64,
+    height: 64,
+    backgroundColor: '#f5f3ff',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  alertText: {
+    color: '#1f2937',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 24,
+  },
+  alertButton: {
+    backgroundColor: '#6366f1',
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    width: '100%',
+    alignItems: 'center',
+  },
+  alertButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '800',
+  },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  headerSyncButton: { padding: 4 },
+  countBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: '#4b5563',
+    backgroundColor: 'rgba(75, 85, 99, 0.2)',
+    minWidth: 32,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  countBadgeText: {
+    color: '#e5e7eb',
+    fontSize: 14,
+    fontWeight: '900'
+  },
 });

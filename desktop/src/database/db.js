@@ -180,21 +180,89 @@ async function syncSongs() {
     }
 }
 
-// Search is now local filtering of cache for speed, 
-// OR we could do a Firestore query if dataset is huge. 
-// For <2000 songs, local filter is faster and instant.
+// Helper to normalize text for search (lowercase, strip punctuation)
+const normalize = (text) => {
+    if (!text) return "";
+    return text.toString()
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove accents
+        .replace(/[^\w\s]/gi, ' ') // Replace punctuation with space
+        .replace(/\s+/g, ' ') // Collapse multiple spaces
+        .trim();
+};
+
+// Search is now local filtering of cache for speed
 function searchSongs(queryStr, filter = 'All') {
-    const q = queryStr.toLowerCase();
+    if (filter !== 'All') {
+        // Simple pre-filter for category
+        const filtered = songsCache.filter(song => song.category === filter);
+        if (!queryStr) return filtered.slice(0, 2000);
+        return performRobustSearch(queryStr, filtered);
+    }
 
-    return songsCache.filter(song => {
-        if (filter !== 'All' && song.category !== filter) return false;
-        if (!q) return true;
+    if (!queryStr) return songsCache.slice(0, 2000);
+    return performRobustSearch(queryStr, songsCache);
+}
 
-        return (song.title && song.title.toLowerCase().includes(q)) ||
-            (song.id && song.id.toString().toLowerCase().includes(q)) ||
-            (song.lyrics && song.lyrics.toLowerCase().includes(q)) || // If lyrics field exists
-            (song.slides && song.slides.some(s => s.toLowerCase().includes(q)));
-    }).slice(0, 2000);
+function performRobustSearch(queryStr, source) {
+    const qNormalized = normalize(queryStr);
+    const queryTokens = qNormalized.split(' ').filter(t => t.length > 0);
+
+    if (queryTokens.length === 0) return source.slice(0, 2000);
+
+    // Score and filter
+    const scoredResults = source.map(song => {
+        const titleNormalized = normalize(song.title || "");
+        const idNormalized = normalize(song.id || "");
+
+        // Use full normalized query for phrase matching
+        const isExactTitle = titleNormalized === qNormalized;
+        const startsWithTitle = titleNormalized.startsWith(qNormalized);
+        const exactPhraseInTitle = titleNormalized.includes(qNormalized);
+        const isExactId = idNormalized === qNormalized;
+
+        let score = 0;
+
+        if (isExactId) score += 200;
+        else if (isExactTitle) score += 100;
+        else if (startsWithTitle) score += 80;
+        else if (exactPhraseInTitle) score += 60;
+
+        // Token matches in Title
+        if (score === 0) {
+            const matchTitleTokens = queryTokens.every(token => titleNormalized.includes(token));
+            if (matchTitleTokens) score += 40;
+        }
+
+        // Lyrics & Category matches
+        const lyricsContent = (song.slides || []).join(' ');
+        const lyricsNormalized = normalize(lyricsContent);
+        const categoryNormalized = normalize(song.category || "");
+
+        const exactPhraseInLyrics = lyricsNormalized.includes(qNormalized);
+        if (exactPhraseInLyrics) score += 20;
+
+        const matchCategoryTokens = queryTokens.every(token => categoryNormalized.includes(token));
+        if (matchCategoryTokens) score += 10;
+
+        // If nothing else matched, check if all tokens are somewhere in the lyrics
+        if (score === 0) {
+            const matchLyricsTokens = queryTokens.every(token => lyricsNormalized.includes(token));
+            if (matchLyricsTokens) score += 5;
+        }
+
+        return { song, score };
+    });
+
+    return scoredResults
+        .filter(res => res.score > 0)
+        .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            // Tie-breaker: Alphabetical sorting
+            return (a.song.title || '').localeCompare(b.song.title || '');
+        })
+        .map(res => res.song)
+        .slice(0, 2000);
 }
 
 function getSong(id) {
@@ -210,7 +278,14 @@ async function addSong(songData) {
         await ensureAuth();
         // Firestore set
         await setDoc(doc(db, "songs", songData.id), songData);
-        // Cache updates automatically via listener
+
+        // Optimistic local update
+        if (!songsCache.find(s => s.id === songData.id)) {
+            songsCache.push(songData);
+            songsCache.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: 'base' }));
+            if (global.broadcastSongsUpdate) global.broadcastSongsUpdate(songsCache);
+        }
+
         return songData;
     } catch (err) {
         console.error("Failed to add song:", err);
@@ -222,6 +297,13 @@ async function updateSong(songData) {
     try {
         await ensureAuth();
         await setDoc(doc(db, "songs", songData.id), songData, { merge: true });
+
+        // Optimistic local update
+        const idx = songsCache.findIndex(s => s.id === songData.id);
+        if (idx !== -1) {
+            songsCache[idx] = { ...songsCache[idx], ...songData };
+            if (global.broadcastSongsUpdate) global.broadcastSongsUpdate(songsCache);
+        }
     } catch (err) {
         console.error("Failed to update song:", err);
         throw err;

@@ -63,13 +63,21 @@ function startServer(onStatusChange) {
     });
 
     const PORT = 3001;
+    server.on('error', (err) => {
+        console.error("[Server] Error:", err.message);
+        if (onStatusChange) onStatusChange({ status: 'Error', ip: 'Unknown', error: err.message });
+    });
+
     server.listen(PORT, '0.0.0.0', () => {
         const ip = getLocalIP();
         console.log(`Server running at http://${ip}:${PORT}`);
         if (onStatusChange) onStatusChange({ status: 'Running', ip: ip, connections: 0 });
+    }).on('error', (err) => {
+        console.error("[Server] Listen Error:", err);
+        if (onStatusChange) onStatusChange({ status: 'Offline', ip: 'Unknown', error: err.message });
     });
 
     return io;
 }
 
-module.exports = { startServer };
+module.exports = { startServer, getLocalIP };
