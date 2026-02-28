@@ -5,7 +5,7 @@ const { getFirestore } = require("firebase/firestore");
 const { getAuth } = require("firebase/auth");
 
 const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY || "AIzaSyDz4iEKuGR7UktpVNtY8QT8dZrxKlzQXIE",
+    apiKey: process.env.FIREBASE_API_KEY || "AIzaSyAGcC_oF9aLuK_ofHuE7I3wEafBs5ckfbo",
     authDomain: "church-lyrics-viewer.firebaseapp.com",
     projectId: "church-lyrics-viewer",
     storageBucket: "church-lyrics-viewer.firebasestorage.app",
