@@ -15,6 +15,8 @@
             --text-primary: #1e293b;
             --text-secondary: #64748b;
             --border-color: #e2e8f0;
+            --live-color: #10b981;
+            --offline-color: #ef4444;
         }
 
         body {
@@ -22,7 +24,7 @@
             background-color: var(--bg-color);
             color: var(--text-primary);
             margin: 0;
-            padding: 20px;
+            padding: 16px 20px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -32,77 +34,202 @@
             touch-action: manipulation;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+        .top-bar {
             width: 100%;
+            max-width: 480px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            z-index: 100;
+        }
+
+        .hamburger {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            gap: 4px;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .logo-container {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--primary-color), #818cf8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
-        }
-
-        .logo-text {
-            color: white;
-            font-weight: 800;
-            font-size: 20px;
-            letter-spacing: -0.5px;
-        }
-
-        .title {
-            font-size: 24px;
-            font-weight: 800;
-            margin: 0 0 5px 0;
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: var(--text-primary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
         }
 
         .status {
-            font-size: 14px;
+            font-size: 11px;
             color: var(--text-secondary);
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 6px;
+            font-weight: 600;
+            font-style: italic;
+            /* italicize */
+            background: white;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            /* pill shape */
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            white-space: nowrap;
         }
 
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background-color: #ef4444;
+            background-color: var(--offline-color);
             /* red initially */
         }
 
         .status-dot.connected {
-            background-color: #10b981;
+            background-color: var(--live-color);
             /* green */
+        }
+
+        .header {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            background: var(--surface-color);
+            padding: 12px 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+        }
+
+        .logo-container {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: -0.5px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+        }
+
+
+        .preview-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--surface-color);
+            border: 2px solid var(--offline-color);
+            /* dynamics border color based on state, initially offline red */
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 350px;
+            /* fixed height */
+            box-sizing: border-box;
+            position: relative;
+            /* for absolute positioning of LIVE badge */
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .preview-container.is-live {
+            border-color: var(--live-color);
+        }
+
+        .preview-text {
+            font-size: clamp(16px, 5vw, 24px);
+            font-weight: 700;
+            /* bold font */
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* Modern Sans */
+            color: var(--primary-color);
+            text-align: center;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-width: 100%;
+            max-height: 100%;
+            overflow-y: auto;
+            padding: 0 10px;
+        }
+
+        /* LIVE badge inside preview */
+        .btn-blank {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: var(--text-primary);
+            border: none;
+            color: #f8fafc;
+            border-radius: 9999px;
+            /* Pill */
+            font-weight: 700;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 6px 12px;
+            /* Pad out pill */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.15s ease;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .btn-blank:active {
+            transform: scale(0.95);
+        }
+
+        .btn-blank.active-blank {
+            background-color: var(--offline-color);
+            color: white;
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
         }
 
         .controls-grid {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             width: 100%;
-            max-width: 400px;
+            max-width: 480px;
             flex: 1;
             padding-bottom: 20px;
         }
 
         .nav-row {
             display: flex;
-            gap: 15px;
+            gap: 16px;
             width: 100%;
         }
 
@@ -111,103 +238,221 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             color: var(--text-primary);
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.1s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             flex: 1;
-            padding: 24px 12px;
-        }
-
-        .btn:active {
-            transform: scale(0.96);
-            background-color: #f1f5f9;
+            padding: 20px 12px;
         }
 
         .btn-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
+            font-size: 24px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            transition: all 0.15s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
         }
 
         .btn-next {
             background: linear-gradient(135deg, var(--primary-color), #6366f1);
             color: white;
             border: none;
-            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 8px 16px -6px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-next .btn-icon {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .btn-next:active {
             background: linear-gradient(135deg, #4338ca, #4f46e5);
+            box-shadow: 0 4px 8px -4px rgba(79, 70, 229, 0.4);
         }
 
         .btn-prev {
-            /* standard btn style */
             background-color: white;
+            color: var(--text-secondary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-prev:active {
+            background-color: #f8fafc;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        /* Sidebar Styles */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 80%;
+            max-width: 320px;
+            height: 100vh;
+            background: var(--surface-color);
+            z-index: 1001;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.active {
+            transform: translateX(320px);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .schedule-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            list-style: none;
+            margin: 0;
+        }
+
+        .schedule-item {
+            padding: 16px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .schedule-item:active {
+            transform: scale(0.98);
+            background: #f1f5f9;
+        }
+
+        .schedule-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .schedule-cat {
+            font-size: 12px;
             color: var(--text-secondary);
         }
 
-        .btn-blank-wrapper {
-            width: 100%;
-            height: 120px;
-            /* fixed height for prominent blank button */
-            display: flex;
-            margin-top: 10px;
-        }
-
-        .btn-blank {
-            width: 100%;
-            background-color: #0f172a;
-            border: none;
-            color: #f8fafc;
-        }
-
-        .btn-blank:active {
-            background-color: #1e293b;
-        }
-
-        .btn-blank.active-blank {
-            background-color: #ef4444;
-            /* red when blinding the screen */
-            color: white;
-            box-shadow: 0 10px 20px -5px rgba(239, 68, 68, 0.4);
+        .empty-schedule {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 40px;
+            font-style: italic;
         }
     </style>
 </head>
 
 <body>
 
+    <div class="top-bar">
+        <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar(true)">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="status">
+            <div id="statusDot" class="status-dot"></div>
+            <span id="statusText">Connecting</span>
+        </div>
+    </div>
+
     <div class="header">
         <div class="logo-container">
             <div class="logo-text">LyriX</div>
         </div>
         <h1 class="title">Remote Control</h1>
-        <div class="status">
-            <div id="statusDot" class="status-dot"></div>
-            <span id="statusText">Connecting...</span>
-        </div>
+    </div>
+
+    <div class="preview-container is-live" id="previewContainer">
+        <button class="btn-blank" id="blankBtn" onclick="sendCommand('blank-screen')">
+            <span id="blankIcon" style="font-size: 8px;">🟢</span>
+            <span id="blankText" style="letter-spacing: 0.5px;">LIVE</span>
+        </button>
+        <div class="preview-text" id="previewText">Waiting for lyrics...</div>
     </div>
 
     <div class="controls-grid">
         <div class="nav-row">
             <button class="btn btn-prev" onclick="sendCommand('prev-song')">
                 <span class="btn-icon">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="m11 17-5-5 5-5" />
+                        <path d="m18 17-5-5 5-5" />
                     </svg>
                 </span>
                 Prev Song
             </button>
             <button class="btn btn-next" onclick="sendCommand('next-song')">
                 <span class="btn-icon">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="m13 17 5-5-5-5" />
+                        <path d="m6 17 5-5-5-5" />
                     </svg>
                 </span>
                 Next Song
@@ -217,42 +462,73 @@
         <div class="nav-row">
             <button class="btn btn-prev" onclick="sendCommand('prev-slide')">
                 <span class="btn-icon">
-                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="m15 18-6-6 6-6" />
                     </svg>
                 </span>
                 Prev Slide
             </button>
             <button class="btn btn-next" onclick="sendCommand('next-slide')">
                 <span class="btn-icon">
-                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="m9 18 6-6-6-6" />
                     </svg>
                 </span>
                 Next Slide
             </button>
         </div>
+    </div>
 
-        <div class="btn-blank-wrapper">
-            <button class="btn btn-blank" id="blankBtn" onclick="sendCommand('blank-screen')">
-                <span class="btn-icon" id="blankIcon">🟢</span>
-                <span id="blankText" style="font-weight: 800; letter-spacing: 1px;">LIVE</span>
-            </button>
+    <!-- Sidebar for Schedule -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Service Schedule</h2>
+            <button class="close-sidebar" onclick="toggleSidebar(false)">&times;</button>
         </div>
+        <ul class="schedule-list" id="scheduleList">
+            <li class="empty-schedule">Waiting for schedule data...</li>
+        </ul>
     </div>
 
     <script>
         const socket = io();
         const statusDot = document.getElementById('statusDot');
         const statusText = document.getElementById('statusText');
-        const blankBtn = document.getElementById('blankBtn');
 
+        const previewContainer = document.getElementById('previewContainer');
+        const blankBtn = document.getElementById('blankBtn');
         const blankIcon = document.getElementById('blankIcon');
         const blankText = document.getElementById('blankText');
+        const previewText = document.getElementById('previewText');
+
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const scheduleList = document.getElementById('scheduleList');
+
+        let currentSchedule = [];
+
+        function toggleSidebar(show) {
+            if (show) {
+                sidebar.classList.add('active');
+                sidebarOverlay.classList.add('active');
+            } else {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            }
+        }
+
+        function projectSongFromSchedule(songId) {
+            sendCommand('set-song-by-id', { id: songId });
+            toggleSidebar(false);
+        }
 
         socket.on('connect', () => {
             statusDot.classList.add('connected');
             statusText.textContent = 'Connected (Live)';
+            socket.emit('fetch-schedule');
         });
 
         socket.on('disconnect', (reason) => {
@@ -273,24 +549,46 @@
         // Listen for true state changes from the Desktop App
         socket.on('blank-screen', (serverIsBlack) => {
             if (serverIsBlack) {
+                previewContainer.classList.remove('is-live');
                 blankBtn.classList.add('active-blank');
                 blankIcon.textContent = '🔴';
                 blankText.textContent = 'OFF AIR';
             } else {
+                previewContainer.classList.add('is-live');
                 blankBtn.classList.remove('active-blank');
                 blankIcon.textContent = '🟢';
                 blankText.textContent = 'LIVE';
             }
         });
 
-        function sendCommand(action) {
+        socket.on('current-slide', (data) => {
+            if (data !== undefined && data.slide !== undefined) {
+                previewText.textContent = data.slide || '';
+            }
+        });
+
+        socket.on('schedule-updated', (schedule) => {
+            currentSchedule = schedule || [];
+            if (currentSchedule.length === 0) {
+                scheduleList.innerHTML = '<li class="empty-schedule">Schedule is empty</li>';
+            } else {
+                scheduleList.innerHTML = currentSchedule.map(item => `
+                    <li class="schedule-item" onclick="projectSongFromSchedule('${item.songId}')">
+                        <div class="schedule-title">${item.title}</div>
+                        <div class="schedule-cat">${item.category}</div>
+                    </li>
+                `).join('');
+            }
+        });
+
+        function sendCommand(action, extraPayload = {}) {
             // Provide immediate haptic feedback if supported on mobile
             if (navigator.vibrate) navigator.vibrate(50);
 
             const cmdId = Date.now().toString() + Math.random().toString();
 
             // Just emit the command, and let the Desktop App's state echo back to update our UI
-            socket.emit('command', { action, cmdId });
+            socket.emit('command', { action, cmdId, ...extraPayload });
         }
     </script>
 </body>
