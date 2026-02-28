@@ -2068,7 +2068,7 @@ function AddSongModal({ onClose, onSave, initialData, defaultCategory, onConfirm
                                 <option value="English Hymns">English Hymns</option>
                                 <option value="Telugu Songs">Telugu Songs</option>
                                 <option value="Hindi Songs">Hindi Songs</option>
-                                <option value="Marathi">Marathi</option>
+                                <option value="Marathi Songs">Marathi Songs</option>
                                 <option value="Special Songs">Special Songs</option>
                             </select>
                         </div>
