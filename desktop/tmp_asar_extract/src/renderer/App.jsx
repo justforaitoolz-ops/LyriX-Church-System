@@ -38,7 +38,7 @@ function App() {
     const [updateProgress, setUpdateProgress] = useState(0);
     const [updateInfo, setUpdateInfo] = useState(null);
     const [updateError, setUpdateError] = useState('');
-    const [appVersion, setAppVersion] = useState('1.3.4');
+    const [appVersion, setAppVersion] = useState('1.2.5');
     const [isSyncing, setIsSyncing] = useState(false);
 
     const confirmOverwrite = (title) => {
@@ -72,7 +72,7 @@ function App() {
     const [showCloseConfirm, setShowCloseConfirm] = useState(false);
 
     // Library Categories
-    const allCategories = ['English Choruses', 'English Hymns', 'Telugu Songs', 'Hindi Songs', 'Special Songs', 'Marathi Songs'];
+    const allCategories = ['English Choruses', 'English Hymns', 'Telugu Songs', 'Hindi Songs', 'Special Songs', 'Children Songs'];
     const [visibleCategories, setVisibleCategories] = useState(() => {
         const saved = localStorage.getItem('setting_visibleCategories');
         return saved ? JSON.parse(saved) : allCategories;
@@ -177,6 +177,9 @@ function App() {
                 else if (cmd.action === 'blank-screen') { setIsBlack(prev => !prev); }
                 else if (cmd.action === 'set-song') {
                     selectSong(cmd.song);
+                    if (!stateRef.current.isProjectorOpen && window.electron) {
+                        window.electron.invoke('open-projector-window').then(isOpen => setIsProjectorOpen(isOpen));
+                    }
                 }
                 else if (cmd.action === 'next-song') {
                     const { schedule, currentSong } = stateRef.current;
@@ -184,6 +187,9 @@ function App() {
                         const currentIndex = schedule.findIndex(s => s.instanceId === (currentSong?.instanceId || currentSong?.id));
                         if (currentIndex < schedule.length - 1) {
                             selectSong(schedule[currentIndex + 1]);
+                            if (!stateRef.current.isProjectorOpen && window.electron) {
+                                window.electron.invoke('open-projector-window').then(isOpen => setIsProjectorOpen(isOpen));
+                            }
                         }
                     }
                 }
@@ -193,6 +199,9 @@ function App() {
                         const currentIndex = schedule.findIndex(s => s.instanceId === (currentSong?.instanceId || currentSong?.id));
                         if (currentIndex > 0) {
                             selectSong(schedule[currentIndex - 1]);
+                            if (!stateRef.current.isProjectorOpen && window.electron) {
+                                window.electron.invoke('open-projector-window').then(isOpen => setIsProjectorOpen(isOpen));
+                            }
                         }
                     }
                 }
@@ -506,6 +515,11 @@ function App() {
         setSlides(rawSlides);
         setCurrentSlideIndex(0);
         setIsBlack(false);
+
+        // Wake up projector
+        if (window.electron) {
+            window.electron.invoke('open-projector-window').then(isOpen => setIsProjectorOpen(isOpen));
+        }
     };
 
     const executeDelete = async () => {
@@ -958,7 +972,6 @@ function App() {
                                             <option value="English Hymns">English Hymns</option>
                                             <option value="Telugu Songs">Telugu Songs</option>
                                             <option value="Hindi Songs">Hindi Songs</option>
-                                            <option value="Marathi">Marathi</option>
                                             <option value="Special Songs">Special Songs</option>
                                         </select>
                                     </div>
@@ -1210,12 +1223,12 @@ function App() {
                                 {/* List */}
                                 <div className="flex-1 overflow-y-auto w-full">
                                     <div className="text-[10px] font-bold text-slate-400 px-4 py-2 uppercase tracking-wider bg-slate-50/50 sticky top-0 z-10 backdrop-blur-md italic">
-                                        Showing all results
+                                        Showing top results
                                     </div>
                                     {searchResults.filter(song => {
                                         if (activeTab === 'favourites') return favourites.includes(song.id);
                                         return activeFilter === 'All' ? visibleCategories.includes(song.category) : true;
-                                    }).map(song => (
+                                    }).slice(0, 100).map(song => (
                                         <div
                                             key={song.id}
                                             onClick={() => selectSong(song)}
@@ -1264,6 +1277,9 @@ function App() {
                                 onRefresh={() => { fetchSchedule(); setCustomAlert("Schedule synced successfully."); }}
                                 onSelect={(song) => {
                                     selectSong(song);
+                                    if (!isProjectorOpen) {
+                                        handleToggleProjector();
+                                    }
                                 }}
                                 currentSongId={currentSong?.id}
                             />
@@ -1960,7 +1976,7 @@ function AddSongModal({ onClose, onSave, initialData, defaultCategory, onConfirm
     const handleSave = async () => {
         const cleanedTitle = (title || '').trim();
         if (!id || !lyrics || !cleanedTitle) {
-            setCustomAlert('Song Title, ID and Lyrics are mandatory.');
+            setCustomAlert('Title and Lyrics are mandatory.');
             setLoading(false);
             return;
         }
@@ -2068,7 +2084,6 @@ function AddSongModal({ onClose, onSave, initialData, defaultCategory, onConfirm
                                 <option value="English Hymns">English Hymns</option>
                                 <option value="Telugu Songs">Telugu Songs</option>
                                 <option value="Hindi Songs">Hindi Songs</option>
-                                <option value="Marathi">Marathi</option>
                                 <option value="Special Songs">Special Songs</option>
                             </select>
                         </div>

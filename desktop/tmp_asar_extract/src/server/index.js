@@ -27,9 +27,9 @@ function startServer(onStatusChange) {
     const remotePath = path.join(__dirname, '../../public/remote');
     app.use(express.static(remotePath));
 
-    // Explicit fallback for root and /remote
-    app.get(['/', '/remote'], (req, res) => {
-        console.log(`[Server] Serving index.html to ${req.ip} for ${req.url}`);
+    // Explicit fallback for root
+    app.get('/', (req, res) => {
+        console.log(`[Server] Serving index.html to ${req.ip}`);
         res.sendFile(path.join(remotePath, 'index.html'));
     });
 
